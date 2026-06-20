@@ -24,9 +24,7 @@ export default function Home() {
   const handleLogin = (email: string, keepLoggedIn: boolean) => {
     setIsAuthenticated(true);
     localStorage.setItem('equilibrium_user_email', email);
-    if (keepLoggedIn) {
-      localStorage.setItem('equilibrium_auth', 'true');
-    }
+    localStorage.setItem('equilibrium_auth', 'true');
   };
 
   const handleLogout = () => {

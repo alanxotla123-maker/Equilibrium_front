@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Scale } from 'lucide-react';
+import { api } from '../lib/api';
 
 interface LoginViewProps {
   onLogin: (email: string, keepLoggedIn: boolean) => void;
@@ -14,7 +15,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -23,32 +24,30 @@ export default function LoginView({ onLogin }: LoginViewProps) {
         setError('Por favor, completa todos los campos.');
         return;
       }
-      // Save user to localStorage
-      const users = JSON.parse(localStorage.getItem('equilibrium_users') || '[]');
-      const userExists = users.some((u: any) => u.email.toLowerCase() === email.trim().toLowerCase());
-      if (userExists || email.trim().toLowerCase() === 'alanxotla123@gmail.com') {
-        setError('El correo electrónico ya está registrado.');
-        return;
+      try {
+        await api.post('/users/register', {
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          password,
+        });
+        
+        // Auto login after registration
+        onLogin(email.trim().toLowerCase(), keepLoggedIn);
+      } catch (err: any) {
+        const msg = err.response?.data?.message || 'Error al registrar el usuario.';
+        setError(Array.isArray(msg) ? msg[0] : msg);
       }
-      users.push({ name: name.trim(), email: email.trim().toLowerCase(), password });
-      localStorage.setItem('equilibrium_users', JSON.stringify(users));
-      
-      // Auto login
-      onLogin(email.trim().toLowerCase(), keepLoggedIn);
     } else {
       const sanitizedEmail = email.trim().toLowerCase();
-      // Check default credentials
-      if (sanitizedEmail === 'alanxotla123@gmail.com' && password === 'Salinas978') {
+      try {
+        await api.post('/users/login', {
+          email: sanitizedEmail,
+          password,
+        });
         onLogin(sanitizedEmail, keepLoggedIn);
-        return;
-      }
-      // Check registered users
-      const users = JSON.parse(localStorage.getItem('equilibrium_users') || '[]');
-      const user = users.find((u: any) => u.email === sanitizedEmail && u.password === password);
-      if (user) {
-        onLogin(sanitizedEmail, keepLoggedIn);
-      } else {
-        setError('Credenciales incorrectas. Por favor, verifica tu correo y contraseña.');
+      } catch (err: any) {
+        const msg = err.response?.data?.message || 'Credenciales incorrectas. Por favor, verifica tu correo y contraseña.';
+        setError(Array.isArray(msg) ? msg[0] : msg);
       }
     }
   };

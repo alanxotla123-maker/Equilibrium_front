@@ -45,51 +45,8 @@ export default function SavingsView() {
       ]);
       setSavings(savingsRes.data);
       setCategories(categoriesRes.data);
-
-      if (savingsRes.data.length === 0) {
-        await seedDefaultSavings(categoriesRes.data);
-      }
     } catch (error) {
       console.error('Error fetching data:', error);
-    }
-  };
-
-  const seedDefaultSavings = async (existingCategories: Category[]) => {
-    try {
-      let financeCat = existingCategories.find(c => c.name === 'Finanzas');
-      if (!financeCat) {
-        const catRes = await api.post('/categories', { name: 'Finanzas', color: '#f59e0b' });
-        financeCat = catRes.data;
-      }
-
-      await api.post('/savings', {
-        title: 'MacBook Pro M3',
-        goalAmount: 2400.00,
-        currentAmount: 1008.00, // 42% of 2400
-        targetDate: '2023-12-31T23:59:59.000Z',
-        categoryId: financeCat?.id
-      });
-
-      await api.post('/savings', {
-        title: 'Viaje a Japón',
-        goalAmount: 3500.00,
-        currentAmount: 850.00,
-        targetDate: '2024-04-30T23:59:59.000Z',
-        categoryId: financeCat?.id
-      });
-
-      await api.post('/savings', {
-        title: 'Fondo Nuevo Auto',
-        goalAmount: 12000.00,
-        currentAmount: 1200.00,
-        targetDate: '2024-12-31T23:59:59.000Z',
-        categoryId: financeCat?.id
-      });
-
-      const savingsRes = await api.get<Saving[]>('/savings');
-      setSavings(savingsRes.data);
-    } catch (error) {
-      console.error('Error seeding savings:', error);
     }
   };
 
