@@ -183,23 +183,23 @@ export default function TasksView() {
   };
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto bg-slate-100/40 select-none">
+    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-100/40 select-none">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h2 className="text-3xl font-extrabold text-slate-800 flex items-center gap-3">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 flex items-center gap-3">
             <span className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
               <FileText className="w-6 h-6" />
             </span>
-            Tareas sin fecha
+            Tareas
           </h2>
-          <p className="text-sm text-slate-500 font-medium mt-1">
+          <p className="text-xs md:text-sm text-slate-500 font-medium mt-1">
             Gestiona, organiza y completa todas tus tareas pendientes.
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/10 transition-all"
+          className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/10 transition-all w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Nueva Tarea

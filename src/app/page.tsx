@@ -7,11 +7,13 @@ import SavingsView from '../components/SavingsView';
 import TasksView from '../components/TasksView';
 import DashboardView from '../components/DashboardView';
 import LoginView from '../components/LoginView';
+import { Menu } from 'lucide-react';
 
 export default function Home() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const authState = localStorage.getItem('equilibrium_auth');
@@ -49,6 +51,23 @@ export default function Home() {
     }
   };
 
+  const getViewTitle = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return 'Dashboard';
+      case 'calendario':
+        return 'Calendario';
+      case 'tareas':
+        return 'Tareas';
+      case 'finanzas':
+        return 'Finanzas';
+      case 'metas':
+        return 'Metas';
+      default:
+        return 'Equilibrium';
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
@@ -64,11 +83,36 @@ export default function Home() {
   return (
     <div className="flex h-screen w-screen overflow-hidden font-sans bg-slate-100">
       {/* Navigation Left Sidebar */}
-      <Sidebar currentView={currentView} onViewChange={setCurrentView} onLogout={handleLogout} />
+      <Sidebar
+        currentView={currentView}
+        onViewChange={setCurrentView}
+        onLogout={handleLogout}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
 
       {/* Main Dashboard Panel */}
-      <main className="flex-1 flex flex-col min-w-0 h-full">
-        {renderView()}
+      <main className="flex-1 flex flex-col min-w-0 h-full relative">
+        {/* Mobile Header Bar */}
+        <header className="flex md:hidden items-center justify-between px-6 py-4 bg-white border-b border-slate-200 z-30 select-none">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <h1 className="font-extrabold text-slate-800 text-lg">{getViewTitle()}</h1>
+          </div>
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-extrabold text-xs">
+            AL
+          </div>
+        </header>
+
+        {/* View container */}
+        <div className="flex-1 overflow-hidden relative flex flex-col">
+          {renderView()}
+        </div>
       </main>
     </div>
   );

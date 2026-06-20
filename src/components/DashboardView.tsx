@@ -147,16 +147,16 @@ export default function DashboardView({ onViewChange }: DashboardViewProps) {
   };
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto bg-slate-100/40 select-none flex flex-col justify-between min-h-screen">
+    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-100/40 select-none flex flex-col justify-between min-h-screen">
       {/* Top Greeting Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6 md:mb-8">
         <div>
-          <h2 className="text-3xl font-extrabold text-slate-800">Hola, Alan</h2>
-          <p className="text-sm text-slate-500 font-medium mt-1">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800">Hola, Alan</h2>
+          <p className="text-xs md:text-sm text-slate-500 font-medium mt-1">
             Aquí tienes el resumen de tu productividad y finanzas para hoy.
           </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-4">
           <button className="p-3 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 hover:text-slate-800 transition-all relative">
             <Bell className="w-5 h-5" />
             {urgentTasks.length > 0 && (
@@ -173,7 +173,7 @@ export default function DashboardView({ onViewChange }: DashboardViewProps) {
       </div>
 
       {/* Top Indicators Widgets */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
         {/* Urgent Widget */}
         <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
           <div className="flex items-start justify-between">
