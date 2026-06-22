@@ -39,3 +39,12 @@ export interface Saving {
   targetDate?: string;
   category?: Category;
 }
+
+export interface Transaction {
+  id: string;
+  type: 'gasto' | 'ingreso';
+  amount: number;
+  date: string;
+  description?: string;
+  category?: Category;
+}

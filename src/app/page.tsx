@@ -7,6 +7,7 @@ import SavingsView from '../components/SavingsView';
 import TasksView from '../components/TasksView';
 import DashboardView from '../components/DashboardView';
 import LoginView from '../components/LoginView';
+import TransactionsView from '../components/TransactionsView';
 import { Menu } from 'lucide-react';
 
 export default function Home() {
@@ -44,6 +45,7 @@ export default function Home() {
       case 'tareas':
         return <TasksView />;
       case 'finanzas':
+        return <TransactionsView />;
       case 'metas':
         return <SavingsView />;
       default:
