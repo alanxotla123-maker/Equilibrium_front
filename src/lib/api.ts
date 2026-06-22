@@ -46,6 +46,7 @@ export interface Card {
   creditLimit: number;
   closingDay: number;
   dueDate: number;
+  initialSpent: number;
 }
 
 export interface Transaction {

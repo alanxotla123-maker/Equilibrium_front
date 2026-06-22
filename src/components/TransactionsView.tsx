@@ -30,6 +30,12 @@ export default function TransactionsView() {
   const [creditLimit, setCreditLimit] = useState('');
   const [closingDay, setClosingDay] = useState('15');
   const [dueDate, setDueDate] = useState('5');
+  const [initialSpent, setInitialSpent] = useState('');
+
+  // Register Card Payment Modal (Manual payment)
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [paymentCardId, setPaymentCardId] = useState<string | null>(null);
 
   // Add/Adjust Saving Goal Modal
   const [isSavingModalOpen, setIsSavingModalOpen] = useState(false);
@@ -127,7 +133,8 @@ export default function TransactionsView() {
         name: cardName,
         creditLimit: parseFloat(creditLimit),
         closingDay: parseInt(closingDay),
-        dueDate: parseInt(dueDate)
+        dueDate: parseInt(dueDate),
+        initialSpent: initialSpent ? parseFloat(initialSpent) : 0
       });
 
       setIsCardModalOpen(false);
@@ -135,10 +142,57 @@ export default function TransactionsView() {
       setCreditLimit('');
       setClosingDay('15');
       setDueDate('5');
+      setInitialSpent('');
 
       fetchData();
     } catch (error) {
       console.error('Error creating card:', error);
+    }
+  };
+
+  // Record Manual Payment Handler
+  const handleRecordPayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!paymentAmount || parseFloat(paymentAmount) <= 0 || !paymentCardId) return;
+
+    const selectedCard = cards.find(c => c.id === paymentCardId);
+    if (!selectedCard) return;
+
+    try {
+      await api.post('/transactions', {
+        type: 'ingreso', // Payments count as positive cash flow/reductions to card debt
+        amount: parseFloat(paymentAmount),
+        date: new Date().toISOString(),
+        description: `Abono manual a tarjeta ${selectedCard.name}`,
+        cardId: paymentCardId
+      });
+
+      setIsPaymentModalOpen(false);
+      setPaymentAmount('');
+      setPaymentCardId(null);
+
+      fetchData();
+    } catch (error) {
+      console.error('Error recording card payment:', error);
+    }
+  };
+
+  // Quick Pay Full Balance Handler
+  const handlePayFullBalance = async (card: Card, currentDebt: number) => {
+    if (currentDebt <= 0) return;
+
+    try {
+      await api.post('/transactions', {
+        type: 'ingreso',
+        amount: currentDebt,
+        date: new Date().toISOString(),
+        description: `Pago total a tarjeta ${card.name}`,
+        cardId: card.id
+      });
+
+      fetchData();
+    } catch (error) {
+      console.error('Error recording full card payment:', error);
     }
   };
 
@@ -223,15 +277,22 @@ export default function TransactionsView() {
 
   const netBalance = totalIncomes - totalExpenses;
 
-  // Credit Card Balance Calculation (sum transactions linked to a card)
-  const getCardUsedBalance = (cardId: string) => {
-    return transactions
+  // Credit Card Balance Calculation (initialSpent + card gastos - card ingresos)
+  const getCardUsedBalance = (card: Card) => {
+    const cardId = card.id;
+    const initial = Number(card.initialSpent) || 0;
+    const cardGastos = transactions
       .filter(t => t.type === 'gasto' && t.cardId === cardId)
       .reduce((acc, curr) => acc + Number(curr.amount), 0);
+    const cardIngresos = transactions
+      .filter(t => t.type === 'ingreso' && t.cardId === cardId)
+      .reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+    return Math.max(0, initial + cardGastos - cardIngresos);
   };
 
   // Total credit cards debt
-  const totalCardDebt = cards.reduce((acc, curr) => acc + getCardUsedBalance(curr.id), 0);
+  const totalCardDebt = cards.reduce((acc, curr) => acc + getCardUsedBalance(curr), 0);
 
   // Total savings accumulated
   const totalSavings = savings.reduce((acc, curr) => acc + Number(curr.currentAmount), 0);
@@ -265,6 +326,19 @@ export default function TransactionsView() {
       month: 'short',
       year: 'numeric'
     });
+  };
+
+  // Check if current day of month is in the payment period of the card
+  const isPaymentPeriodActive = (card: Card) => {
+    const currentDay = new Date().getDate();
+    const closing = card.closingDay;
+    const due = card.dueDate;
+
+    if (closing < due) {
+      return currentDay >= closing && currentDay <= due;
+    } else {
+      return currentDay >= closing || currentDay <= due;
+    }
   };
 
   // Card color presets
@@ -508,54 +582,104 @@ export default function TransactionsView() {
                     <h3 className="text-lg font-extrabold text-slate-800">Tus Tarjetas</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {cards.map((card, index) => {
-                        const used = getCardUsedBalance(card.id);
+                        const used = getCardUsedBalance(card);
                         const limit = Number(card.creditLimit);
                         const available = Math.max(0, limit - used);
                         const usedPercentage = Math.min(100, Math.round((used / limit) * 100)) || 0;
                         const gradient = cardGradients[index % cardGradients.length];
+                        const isPaymentActive = isPaymentPeriodActive(card) && used > 0;
 
                         return (
-                          <div
-                            key={card.id}
-                            onClick={() => setSelectedCardId(card.id)}
-                            className={`p-6 rounded-3xl bg-gradient-to-br ${gradient} text-white shadow-lg cursor-pointer transform hover:scale-[1.02] transition-all relative overflow-hidden flex flex-col justify-between h-56 ${selectedCardId === card.id ? 'ring-4 ring-indigo-500/30 border-2 border-white' : 'opacity-90'}`}
-                          >
-                            <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
-                              <CreditCard className="w-32 h-32" />
-                            </div>
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h4 className="font-extrabold text-lg leading-tight">{card.name}</h4>
-                                <span className="text-[10px] text-white/70 font-semibold">Corte: Día {card.closingDay} | Pago: Día {card.dueDate}</span>
+                          <div key={card.id} className="space-y-2">
+                            <div
+                              onClick={() => setSelectedCardId(card.id)}
+                              className={`p-6 rounded-3xl bg-gradient-to-br ${gradient} text-white shadow-lg cursor-pointer transform hover:scale-[1.02] transition-all relative overflow-hidden flex flex-col justify-between h-56 ${selectedCardId === card.id ? 'ring-4 ring-indigo-500/30 border-2 border-white' : 'opacity-90'}`}
+                            >
+                              <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
+                                <CreditCard className="w-32 h-32" />
                               </div>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setDeleteCardId(card.id);
-                                  setIsConfirmCardOpen(true);
-                                }}
-                                className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white/80 hover:text-white"
-                                title="Eliminar tarjeta"
-                              >
-                                <X className="w-4 h-4" />
-                              </button>
-                            </div>
-
-                            <div className="space-y-2">
-                              <div className="flex justify-between items-baseline">
-                                <span className="text-[10px] font-bold text-white/80">Saldo Utilizado</span>
-                                <span className="text-xl font-extrabold">${used.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="font-extrabold text-lg leading-tight">{card.name}</h4>
+                                  <span className="text-[10px] text-white/70 font-semibold">Corte: Día {card.closingDay} | Pago: Día {card.dueDate}</span>
+                                </div>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeleteCardId(card.id);
+                                    setIsConfirmCardOpen(true);
+                                  }}
+                                  className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white/80 hover:text-white"
+                                  title="Eliminar tarjeta"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
                               </div>
 
-                              <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
-                                <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${usedPercentage}%` }} />
-                              </div>
+                              <div className="space-y-2">
+                                <div className="flex justify-between items-baseline">
+                                  <span className="text-[10px] font-bold text-white/80">Saldo Gastado</span>
+                                  <span className="text-xl font-extrabold">${used.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                                </div>
 
-                              <div className="flex justify-between text-[9px] font-bold text-white/70">
-                                <span>Disponible: ${available.toLocaleString('es-ES')}</span>
-                                <span>Límite: ${limit.toLocaleString('es-ES')}</span>
+                                <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+                                  <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${usedPercentage}%` }} />
+                                </div>
+
+                                <div className="flex justify-between text-[9px] font-bold text-white/70">
+                                  <span>Disponible: ${available.toLocaleString('es-ES')}</span>
+                                  <span>Límite: ${limit.toLocaleString('es-ES')}</span>
+                                </div>
                               </div>
                             </div>
+
+                            {/* Alert/Warning Period Message */}
+                            {isPaymentActive && (
+                              <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-3 text-[11px] font-bold flex flex-col gap-2">
+                                <p className="flex items-center gap-1.5">
+                                  <AlertCircle className="w-3.5 h-3.5 text-rose-600 flex-shrink-0" />
+                                  Período de pago activo. Debes abonar ${used.toLocaleString('es-ES')} antes del día {card.dueDate}.
+                                </p>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => {
+                                      setPaymentCardId(card.id);
+                                      setIsPaymentModalOpen(true);
+                                    }}
+                                    className="flex-1 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors"
+                                  >
+                                    Abonar
+                                  </button>
+                                  <button
+                                    onClick={() => handlePayFullBalance(card, used)}
+                                    className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+                                  >
+                                    Liquidar Total
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {/* Action Buttons for Normal Mode */}
+                            {!isPaymentActive && used > 0 && (
+                              <div className="flex gap-2 mt-1">
+                                <button
+                                  onClick={() => {
+                                    setPaymentCardId(card.id);
+                                    setIsPaymentModalOpen(true);
+                                  }}
+                                  className="flex-1 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-[11px] rounded-xl transition-colors border border-slate-300/30"
+                                >
+                                  Registrar Pago
+                                </button>
+                                <button
+                                  onClick={() => handlePayFullBalance(card, used)}
+                                  className="flex-1 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[11px] rounded-xl transition-colors border border-emerald-200/30"
+                                >
+                                  Pagar Todo
+                                </button>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -566,9 +690,9 @@ export default function TransactionsView() {
                   <div className="lg:col-span-6 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
                     <div className="flex justify-between items-center mb-6">
                       <div>
-                        <h3 className="font-extrabold text-slate-800 text-base">Consumos Registrados</h3>
+                        <h3 className="font-extrabold text-slate-800 text-base">Historial de la Tarjeta</h3>
                         <p className="text-xs text-slate-400 font-semibold mt-0.5">
-                          {selectedCardId === 'all' ? 'Mostrando consumos de todas las tarjetas' : `Consumos de la tarjeta seleccionada`}
+                          {selectedCardId === 'all' ? 'Consumos y pagos de todas las tarjetas' : `Consumos y pagos registrados`}
                         </p>
                       </div>
                       <select
@@ -583,18 +707,20 @@ export default function TransactionsView() {
 
                     <div className="divide-y divide-slate-100 max-h-[350px] overflow-y-auto">
                       {cardTransactions.length === 0 ? (
-                        <p className="text-xs text-slate-400 font-semibold italic text-center py-12">No hay consumos vinculados a esta tarjeta.</p>
+                        <p className="text-xs text-slate-400 font-semibold italic text-center py-12">No hay movimientos vinculados.</p>
                       ) : (
                         cardTransactions.map(tx => (
                           <div key={tx.id} className="flex justify-between items-center py-3">
                             <div>
-                              <p className="font-bold text-slate-800 text-sm leading-snug">{tx.description || 'Gasto con Tarjeta'}</p>
+                              <p className="font-bold text-slate-800 text-sm leading-snug">{tx.description || (tx.type === 'gasto' ? 'Consumo' : 'Pago')}</p>
                               <div className="flex items-center gap-2 mt-1">
                                 {tx.category && <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase" style={{ backgroundColor: tx.category.color + '12', color: tx.category.color }}>{tx.category.name}</span>}
                                 <span className="text-[10px] text-slate-400 font-medium">{formatDate(tx.date)}</span>
                               </div>
                             </div>
-                            <span className="text-sm font-extrabold text-rose-600">-${Number(tx.amount).toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                            <span className={`text-sm font-extrabold ${tx.type === 'gasto' ? 'text-rose-600' : 'text-emerald-600'}`}>
+                              {tx.type === 'gasto' ? '-' : '+'}${Number(tx.amount).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                            </span>
                           </div>
                         ))
                       )}
@@ -828,17 +954,31 @@ export default function TransactionsView() {
                 />
               </div>
 
-              <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Límite de Crédito ($)</label>
-                <input
-                  type="number"
-                  required
-                  min="1"
-                  placeholder="Ej: 50000"
-                  value={creditLimit}
-                  onChange={(e) => setCreditLimit(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none text-sm font-medium text-slate-800"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Límite de Crédito ($)</label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    placeholder="Ej: 50000"
+                    value={creditLimit}
+                    onChange={(e) => setCreditLimit(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none text-sm font-medium text-slate-800"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Deuda Actual / Lo que ya debo ($)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="Ej: 5000 (Opcional)"
+                    value={initialSpent}
+                    onChange={(e) => setInitialSpent(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none text-sm font-medium text-slate-800"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -880,7 +1020,57 @@ export default function TransactionsView() {
         </div>
       )}
 
-      {/* 3. Add Saving Goal Modal */}
+      {/* 3. Manual Payment to Credit Card Modal */}
+      {isPaymentModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 transform transition-all text-left">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-emerald-500" />
+                Registrar Pago Manual
+              </h3>
+              <button onClick={() => { setIsPaymentModalOpen(false); setPaymentCardId(null); }} className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleRecordPayment} className="space-y-4">
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Cantidad a Pagar / Abonar ($)</label>
+                <input
+                  type="number"
+                  required
+                  step="0.01"
+                  min="0.01"
+                  placeholder="0.00"
+                  value={paymentAmount}
+                  onChange={(e) => setPaymentAmount(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none text-sm font-medium text-slate-800"
+                  autoFocus
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => { setIsPaymentModalOpen(false); setPaymentCardId(null); }}
+                  className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-55 text-sm transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 text-sm transition-colors shadow-md shadow-emerald-600/10"
+                >
+                  Confirmar Pago
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Add Saving Goal Modal */}
       {isSavingModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
           <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 transform transition-all">
@@ -967,7 +1157,7 @@ export default function TransactionsView() {
         </div>
       )}
 
-      {/* 4. Delete Transaction Confirmation Modal */}
+      {/* 5. Delete Transaction Confirmation Modal */}
       {isConfirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
           <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 text-center">
@@ -984,7 +1174,7 @@ export default function TransactionsView() {
         </div>
       )}
 
-      {/* 5. Delete Card Confirmation Modal */}
+      {/* 6. Delete Card Confirmation Modal */}
       {isConfirmCardOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
           <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 text-center">
@@ -1001,7 +1191,7 @@ export default function TransactionsView() {
         </div>
       )}
 
-      {/* 6. Delete Saving Confirmation Modal */}
+      {/* 7. Delete Saving Confirmation Modal */}
       {isConfirmSavingOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
           <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 text-center">
