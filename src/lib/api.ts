@@ -40,6 +40,14 @@ export interface Saving {
   category?: Category;
 }
 
+export interface Card {
+  id: string;
+  name: string;
+  creditLimit: number;
+  closingDay: number;
+  dueDate: number;
+}
+
 export interface Transaction {
   id: string;
   type: 'gasto' | 'ingreso';
@@ -47,4 +55,6 @@ export interface Transaction {
   date: string;
   description?: string;
   category?: Category;
+  card?: Card;
+  cardId?: string;
 }
