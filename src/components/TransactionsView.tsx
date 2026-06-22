@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, X, AlertCircle, Calendar, Tag, Wallet, ArrowUpRight, ArrowDownRight, Layers, CreditCard, Shield, TrendingUp, DollarSign, Target, Check, HelpCircle } from 'lucide-react';
+import { Plus, Trash2, X, AlertCircle, Calendar, Tag, Wallet, ArrowUpRight, ArrowDownRight, Layers, CreditCard, Shield, TrendingUp, DollarSign, Target, Check, HelpCircle, Edit2 } from 'lucide-react';
 import { api, Transaction, Category, Card, Saving } from '../lib/api';
 
 type TabType = 'diario' | 'tarjetas' | 'ahorros';
@@ -31,6 +31,11 @@ export default function TransactionsView() {
   const [closingDay, setClosingDay] = useState('15');
   const [dueDate, setDueDate] = useState('5');
   const [initialSpent, setInitialSpent] = useState('');
+
+  // Edit Card Modal
+  const [isEditCardModalOpen, setIsEditCardModalOpen] = useState(false);
+  const [editCardId, setEditCardId] = useState<string | null>(null);
+  const [editCardInitialSpent, setEditCardInitialSpent] = useState('');
 
   // Register Card Payment Modal (Manual payment)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -147,6 +152,26 @@ export default function TransactionsView() {
       fetchData();
     } catch (error) {
       console.error('Error creating card:', error);
+    }
+  };
+
+  // Update Card Handler
+  const handleUpdateCard = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editCardId || editCardInitialSpent === '') return;
+
+    try {
+      await api.patch(`/cards/${editCardId}`, {
+        initialSpent: parseFloat(editCardInitialSpent)
+      });
+
+      setIsEditCardModalOpen(false);
+      setEditCardId(null);
+      setEditCardInitialSpent('');
+
+      fetchData();
+    } catch (error) {
+      console.error('Error updating card spent balance:', error);
     }
   };
 
@@ -654,17 +679,31 @@ export default function TransactionsView() {
                                   <h4 className="font-extrabold text-lg leading-tight">{card.name}</h4>
                                   <span className="text-[10px] text-white/70 font-semibold">Corte: Día {card.closingDay} | Pago: Día {card.dueDate}</span>
                                 </div>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setDeleteCardId(card.id);
-                                    setIsConfirmCardOpen(true);
-                                  }}
-                                  className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white/80 hover:text-white"
-                                  title="Eliminar tarjeta"
-                                >
-                                  <X className="w-4 h-4" />
-                                </button>
+                                <div className="flex gap-1 items-center">
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setEditCardId(card.id);
+                                      setEditCardInitialSpent(String(card.initialSpent || 0));
+                                      setIsEditCardModalOpen(true);
+                                    }}
+                                    className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white/85 hover:text-white border border-transparent"
+                                    title="Editar Saldo Gastado Inicial"
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setDeleteCardId(card.id);
+                                      setIsConfirmCardOpen(true);
+                                    }}
+                                    className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white/80 hover:text-white border border-transparent"
+                                    title="Eliminar tarjeta"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </div>
                               </div>
 
                               <div className="space-y-1">
@@ -1074,6 +1113,57 @@ export default function TransactionsView() {
               <div className="flex gap-3 pt-4 border-t border-slate-100">
                 <button type="button" onClick={() => setIsCardModalOpen(false)} className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors">Cancelar</button>
                 <button type="submit" className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md">Crear Tarjeta</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 2b. Edit Credit Card Modal (Initial Spent) */}
+      {isEditCardModalOpen && editCardId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 transform transition-all text-left">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-indigo-500" />
+                Editar Gastos Históricos
+              </h3>
+              <button onClick={() => { setIsEditCardModalOpen(false); setEditCardId(null); setEditCardInitialSpent(''); }} className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateCard} className="space-y-4">
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Gastos Históricos / Saldo Inicial ($)</label>
+                <input
+                  type="number"
+                  required
+                  min="0"
+                  step="0.01"
+                  placeholder="Ej: 5000"
+                  value={editCardInitialSpent}
+                  onChange={(e) => setEditCardInitialSpent(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none text-sm font-medium text-slate-800"
+                  autoFocus
+                />
+                <p className="text-[10px] text-slate-400 mt-1">Este monto representa los consumos anteriores y no se incluirá en el ciclo de facturación de este mes.</p>
+              </div>
+
+              <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => { setIsEditCardModalOpen(false); setEditCardId(null); setEditCardInitialSpent(''); }}
+                  className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10"
+                >
+                  Actualizar Saldo
+                </button>
               </div>
             </form>
           </div>
