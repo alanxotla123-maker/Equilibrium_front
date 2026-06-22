@@ -183,17 +183,17 @@ export default function TasksView() {
   };
 
   return (
-    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-100/40 select-none">
+    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-100/40 dark:bg-slate-950/40 select-none">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 flex items-center gap-3">
-            <span className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3">
+            <span className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400">
               <FileText className="w-6 h-6" />
             </span>
             Tareas
           </h2>
-          <p className="text-xs md:text-sm text-slate-500 font-medium mt-1">
+          <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
             Gestiona, organiza y completa todas tus tareas pendientes.
           </p>
         </div>
@@ -214,7 +214,7 @@ export default function TasksView() {
             className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
               filterCategoryId === 'all'
                 ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
             }`}
           >
             Todas
@@ -228,7 +228,7 @@ export default function TasksView() {
               className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 ${
                 filterCategoryId === cat.id
                   ? 'text-white border-transparent shadow-sm'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
               style={
                 filterCategoryId === cat.id
@@ -249,38 +249,38 @@ export default function TasksView() {
       {/* Task columns */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pending */}
-        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/60">
-            <h3 className="font-extrabold text-slate-700 text-sm uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-850/60">
+            <h3 className="font-extrabold text-slate-700 dark:text-slate-200 text-sm uppercase tracking-wider">
               Tareas Pendientes
             </h3>
-            <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-full">
               {pending.length}
             </span>
           </div>
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {pending.length === 0 ? (
               <div className="px-6 py-10 text-center">
                 <Check className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                <p className="text-sm text-slate-400 font-semibold">¡Todo al día!</p>
-                <p className="text-xs text-slate-300 font-medium mt-1">No hay tareas pendientes.</p>
+                <p className="text-sm text-slate-400 dark:text-slate-550 font-semibold">¡Todo al día!</p>
+                <p className="text-xs text-slate-300 dark:text-slate-650 font-medium mt-1">No hay tareas pendientes.</p>
               </div>
             ) : (
               pending.map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-start gap-4 px-6 py-4 hover:bg-slate-50/60 transition-colors group"
+                  className="flex items-start gap-4 px-6 py-4 hover:bg-slate-50/60 dark:hover:bg-slate-850/40 transition-colors group"
                 >
                   {/* Checkbox */}
                   <button
                     onClick={() => handleToggleComplete(task)}
-                    className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-md border-2 border-slate-300 hover:border-indigo-500 transition-colors flex items-center justify-center"
+                    className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-md border-2 border-slate-300 dark:border-slate-700 hover:border-indigo-500 transition-colors flex items-center justify-center bg-white dark:bg-slate-850"
                     title="Marcar como completada"
                   />
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-slate-800 text-sm leading-snug">{task.title}</h4>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm leading-snug">{task.title}</h4>
                     {task.description && (
-                      <p className="text-xs text-slate-400 font-medium mt-0.5 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-slate-400 dark:text-slate-500 font-medium mt-0.5 line-clamp-2 leading-relaxed">
                         {task.description}
                       </p>
                     )}
@@ -300,7 +300,7 @@ export default function TasksView() {
                           {task.category.name}
                         </span>
                       )}
-                      <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         {formatDate(task.dueDate)}
                       </span>
@@ -309,14 +309,14 @@ export default function TasksView() {
                   <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
                     <button
                       onClick={() => openEditModal(task)}
-                      className="text-slate-300 hover:text-indigo-500 transition-colors p-1"
+                      className="text-slate-350 dark:text-slate-500 hover:text-indigo-500 transition-colors p-1"
                       title="Editar tarea"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => openConfirmModal(task.id)}
-                      className="text-slate-300 hover:text-rose-500 transition-colors p-1"
+                      className="text-slate-350 dark:text-slate-500 hover:text-rose-500 transition-colors p-1"
                       title="Eliminar tarea"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -327,10 +327,10 @@ export default function TasksView() {
             )}
           </div>
           {pending.length > 0 && (
-            <div className="px-6 py-3 border-t border-slate-100 bg-slate-50/40">
+            <div className="px-6 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-850/40">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-indigo-600 font-bold transition-colors"
+                className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 font-bold transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" /> Agregar tarea
               </button>
@@ -339,21 +339,21 @@ export default function TasksView() {
         </div>
 
         {/* Completed */}
-        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/60">
-            <h3 className="font-extrabold text-slate-700 text-sm uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-850/60">
+            <h3 className="font-extrabold text-slate-700 dark:text-slate-200 text-sm uppercase tracking-wider">
               Tareas Completadas
             </h3>
-            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-450 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-0.5 rounded-full">
               {completed.length}
             </span>
           </div>
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {completed.length === 0 ? (
               <div className="px-6 py-10 text-center">
-                <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                <p className="text-sm text-slate-400 font-semibold">Sin completadas aún</p>
-                <p className="text-xs text-slate-300 font-medium mt-1">
+                <FileText className="w-8 h-8 text-slate-300 dark:text-slate-650 mx-auto mb-2" />
+                <p className="text-sm text-slate-400 dark:text-slate-550 font-semibold">Sin completadas aún</p>
+                <p className="text-xs text-slate-300 dark:text-slate-650 font-medium mt-1">
                   Completa tareas para verlas aquí.
                 </p>
               </div>
@@ -361,7 +361,7 @@ export default function TasksView() {
               completed.map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-start gap-4 px-6 py-4 hover:bg-slate-50/60 transition-colors group"
+                  className="flex items-start gap-4 px-6 py-4 hover:bg-slate-50/60 dark:hover:bg-slate-850/40 transition-colors group"
                 >
                   {/* Completed checkbox */}
                   <button
@@ -372,21 +372,21 @@ export default function TasksView() {
                     <Check className="w-3 h-3 text-white" />
                   </button>
                   <div className="flex-1 min-w-0 opacity-60">
-                    <h4 className="font-bold text-slate-500 text-sm leading-snug line-through">
+                    <h4 className="font-bold text-slate-500 dark:text-slate-400 text-sm leading-snug line-through">
                       {task.title}
                     </h4>
                     {task.description && (
-                      <p className="text-xs text-slate-400 font-medium mt-0.5 line-clamp-1 leading-relaxed">
+                      <p className="text-xs text-slate-450 dark:text-slate-500 font-medium mt-0.5 line-clamp-1 leading-relaxed">
                         {task.description}
                       </p>
                     )}
                     <div className="flex items-center gap-3 mt-2">
                       {task.category && (
-                        <span className="text-[10px] font-bold text-slate-400">
+                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
                           {task.category.name}
                         </span>
                       )}
-                      <span className="text-[10px] text-slate-400 font-medium">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
                         {formatDate(task.dueDate)}
                       </span>
                     </div>
@@ -394,14 +394,14 @@ export default function TasksView() {
                   <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
                     <button
                       onClick={() => openEditModal(task)}
-                      className="text-slate-300 hover:text-indigo-500 transition-colors p-1"
+                      className="text-slate-350 dark:text-slate-505 hover:text-indigo-500 transition-colors p-1"
                       title="Editar tarea"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => openConfirmModal(task.id)}
-                      className="text-slate-300 hover:text-rose-500 transition-colors p-1"
+                      className="text-slate-350 dark:text-slate-505 hover:text-rose-500 transition-colors p-1"
                       title="Eliminar tarea"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -415,15 +415,15 @@ export default function TasksView() {
       </div>
 
       {/* Categories management panel */}
-      <div className="mt-6 bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/60">
-          <h3 className="font-extrabold text-slate-700 text-sm uppercase tracking-wider flex items-center gap-2">
+      <div className="mt-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-850/60">
+          <h3 className="font-extrabold text-slate-700 dark:text-slate-200 text-sm uppercase tracking-wider flex items-center gap-2">
             <Tag className="w-4 h-4 text-indigo-500" />
             Categorías
           </h3>
           <button
             onClick={() => setIsCatModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors"
+            className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 px-3 py-1.5 rounded-lg transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             Nueva Categoría
@@ -431,7 +431,7 @@ export default function TasksView() {
         </div>
         <div className="px-6 py-4">
           {categories.length === 0 ? (
-            <p className="text-xs text-slate-400 font-semibold italic text-center py-2">
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold italic text-center py-2">
               Sin categorías creadas. ¡Agrega una para organizar tus tareas!
             </p>
           ) : (
@@ -460,15 +460,15 @@ export default function TasksView() {
 
       {/* Summary bar */}
       {tasks.length > 0 && (
-        <div className="mt-6 bg-white border border-slate-200 rounded-2xl px-6 py-4 shadow-sm flex items-center gap-6">
+        <div className="mt-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-6 py-4 shadow-sm flex items-center gap-6">
           <div className="flex-1">
-            <div className="flex justify-between items-center text-xs font-bold text-slate-500 mb-2">
+            <div className="flex justify-between items-center text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">
               <span>Progreso General</span>
-              <span className="text-indigo-600">
+              <span className="text-indigo-600 dark:text-indigo-400">
                 {tasks.length > 0 ? Math.round((completed.length / tasks.length) * 100) : 0}%
               </span>
             </div>
-            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-full transition-all duration-700"
                 style={{
@@ -478,28 +478,28 @@ export default function TasksView() {
             </div>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-extrabold text-slate-800">{completed.length}</p>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Completadas</p>
+            <p className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">{completed.length}</p>
+            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Completadas</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-extrabold text-indigo-600">{pending.length}</p>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pendientes</p>
+            <p className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">{pending.length}</p>
+            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Pendientes</p>
           </div>
         </div>
       )}
 
       {/* Create Task Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 transform transition-all">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-800 transform transition-all">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-extrabold text-slate-800 text-xl flex items-center gap-2">
+              <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-xl flex items-center gap-2">
                 <Plus className="w-5 h-5 text-indigo-500" />
                 Nueva Tarea
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors"
+                className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-850 rounded-xl text-slate-400 dark:text-slate-500 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -507,7 +507,7 @@ export default function TasksView() {
 
             <form onSubmit={handleCreateTask} className="space-y-4">
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                   <Edit2 className="w-3.5 h-3.5 text-indigo-500" />
                   Título de la Tarea
                 </label>
@@ -517,12 +517,12 @@ export default function TasksView() {
                   placeholder="Ej: Revisar el reporte mensual"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                 />
               </div>
 
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                   <FileText className="w-3.5 h-3.5 text-indigo-500" />
                   Descripción (Opcional)
                 </label>
@@ -531,13 +531,13 @@ export default function TasksView() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850 resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Calendar className="w-3.5 h-3.5 text-indigo-500" />
                     Fecha y Hora
                   </label>
@@ -546,7 +546,7 @@ export default function TasksView() {
                     disabled={noDueDate}
                     value={noDueDate ? '' : dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 disabled:opacity-50 disabled:bg-slate-50"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850 disabled:opacity-50 disabled:bg-slate-50 dark:disabled:bg-slate-800"
                   />
                   <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
                     <input
@@ -555,18 +555,18 @@ export default function TasksView() {
                       onChange={(e) => setNoDueDate(e.target.checked)}
                       className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
                     />
-                    <span className="text-xs font-bold text-slate-500">Sin fecha límite</span>
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-450">Sin fecha límite</span>
                   </label>
                 </div>
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Tag className="w-3.5 h-3.5 text-indigo-500" />
                     Categoría
                   </label>
                   <select
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                   >
                     <option value="">Sin categoría</option>
                     {categories.map((cat) => (
@@ -578,11 +578,11 @@ export default function TasksView() {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-slate-100">
+              <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-350 font-bold hover:bg-slate-50 dark:hover:bg-slate-850 text-sm transition-colors"
                 >
                   Cancelar
                 </button>
@@ -600,16 +600,16 @@ export default function TasksView() {
 
       {/* Edit Task Modal */}
       {isEditOpen && editTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-800">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-extrabold text-slate-800 text-xl flex items-center gap-2">
+              <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-xl flex items-center gap-2">
                 <Edit2 className="w-5 h-5 text-indigo-500" />
                 Editar Tarea
               </h3>
               <button
                 onClick={() => { setIsEditOpen(false); setEditTask(null); }}
-                className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors"
+                className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-850 rounded-xl text-slate-400 dark:text-slate-500 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -617,7 +617,7 @@ export default function TasksView() {
 
             <form onSubmit={handleUpdateTask} className="space-y-4">
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                   <Edit2 className="w-3.5 h-3.5 text-indigo-500" />
                   Título
                 </label>
@@ -626,12 +626,12 @@ export default function TasksView() {
                   required
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                 />
               </div>
 
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                   <FileText className="w-3.5 h-3.5 text-indigo-500" />
                   Descripción (Opcional)
                 </label>
@@ -639,13 +639,13 @@ export default function TasksView() {
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850 resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Calendar className="w-3.5 h-3.5 text-indigo-500" />
                     Fecha y Hora
                   </label>
@@ -654,7 +654,7 @@ export default function TasksView() {
                     disabled={editNoDueDate}
                     value={editNoDueDate ? '' : editDueDate}
                     onChange={(e) => setEditDueDate(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 disabled:opacity-50 disabled:bg-slate-50"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850 disabled:opacity-50 disabled:bg-slate-50 dark:disabled:bg-slate-800"
                   />
                   <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
                     <input
@@ -663,18 +663,18 @@ export default function TasksView() {
                       onChange={(e) => setEditNoDueDate(e.target.checked)}
                       className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
                     />
-                    <span className="text-xs font-bold text-slate-500">Sin fecha límite</span>
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-455">Sin fecha límite</span>
                   </label>
                 </div>
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Tag className="w-3.5 h-3.5 text-indigo-500" />
                     Categoría
                   </label>
                   <select
                     value={editCategoryId}
                     onChange={(e) => setEditCategoryId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                   >
                     <option value="">Sin categoría</option>
                     {categories.map((cat) => (
@@ -684,11 +684,11 @@ export default function TasksView() {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-slate-100">
+              <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => { setIsEditOpen(false); setEditTask(null); }}
-                  className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-350 font-bold hover:bg-slate-50 dark:hover:bg-slate-850 text-sm transition-colors"
                 >
                   Cancelar
                 </button>
@@ -706,18 +706,18 @@ export default function TasksView() {
 
       {/* Delete Task Confirmation Modal */}
       {isConfirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 text-center">
-            <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-800 text-center">
+            <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/30 text-rose-600 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-6 h-6" />
             </div>
-            <h3 className="font-extrabold text-slate-800 text-lg mb-2">¿Eliminar Tarea?</h3>
-            <p className="text-sm text-slate-500 font-medium mb-6">
+            <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-lg mb-2">¿Eliminar Tarea?</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-6">
               Esta acción no se puede deshacer. ¿Seguro que deseas eliminar esta tarea?
             </p>
             <div className="flex gap-3">
               <button type="button" onClick={() => { setIsConfirmOpen(false); setDeleteTaskId(null); }}
-                className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors">
+                className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-850 text-sm transition-colors">
                 Cancelar
               </button>
               <button type="button" onClick={handleDeleteTask}
@@ -731,20 +731,20 @@ export default function TasksView() {
 
       {/* Create Category Modal */}
       {isCatModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-800">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-extrabold text-slate-800 text-xl flex items-center gap-2">
+              <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-xl flex items-center gap-2">
                 <Tag className="w-5 h-5 text-indigo-500" />
                 Nueva Categoría
               </h3>
-              <button onClick={() => setIsCatModalOpen(false)} className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors">
+              <button onClick={() => setIsCatModalOpen(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-850 rounded-xl text-slate-400 dark:text-slate-500 transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleCreateCategory} className="space-y-4">
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                   <Edit2 className="w-3.5 h-3.5 text-indigo-500" />
                   Nombre
                 </label>
@@ -754,11 +754,11 @@ export default function TasksView() {
                   placeholder="Ej: Trabajo, Personal, Salud..."
                   value={newCatName}
                   onChange={(e) => setNewCatName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                 />
               </div>
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
                   Color de la Categoría
                 </label>
                 {/* Preset color swatches */}
@@ -769,7 +769,7 @@ export default function TasksView() {
                       type="button"
                       onClick={() => setNewCatColor(color)}
                       className={`w-8 h-8 rounded-lg transition-all border-2 ${
-                        newCatColor === color ? 'border-slate-800 scale-110 shadow-md' : 'border-transparent hover:scale-105'
+                        newCatColor === color ? 'border-slate-800 dark:border-slate-200 scale-110 shadow-md' : 'border-transparent hover:scale-105'
                       }`}
                       style={{ backgroundColor: color }}
                     />
@@ -781,10 +781,10 @@ export default function TasksView() {
                     type="color"
                     value={newCatColor}
                     onChange={(e) => setNewCatColor(e.target.value)}
-                    className="w-10 h-10 rounded-lg border border-slate-200 cursor-pointer p-1"
+                    className="w-10 h-10 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer p-1 bg-white dark:bg-slate-850"
                   />
                   <div
-                    className="flex-1 h-10 rounded-xl border border-slate-200 flex items-center px-3 gap-2"
+                    className="flex-1 h-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center px-3 gap-2"
                     style={{ backgroundColor: newCatColor + '18', borderColor: newCatColor + '50' }}
                   >
                     <span className="w-3 h-3 rounded-full" style={{ backgroundColor: newCatColor }} />
@@ -794,9 +794,9 @@ export default function TasksView() {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-3 pt-4 border-t border-slate-100">
+              <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button type="button" onClick={() => setIsCatModalOpen(false)}
-                  className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors">
+                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-850 text-sm transition-colors">
                   Cancelar
                 </button>
                 <button type="submit"
@@ -811,18 +811,18 @@ export default function TasksView() {
 
       {/* Delete Category Confirmation Modal */}
       {isConfirmCatOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 text-center">
-            <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-800 text-center">
+            <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/30 text-rose-600 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-6 h-6" />
             </div>
-            <h3 className="font-extrabold text-slate-800 text-lg mb-2">¿Eliminar Categoría?</h3>
-            <p className="text-sm text-slate-500 font-medium mb-6">
+            <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-lg mb-2">¿Eliminar Categoría?</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-6">
               Las tareas con esta categoría quedarán sin categoría asignada.
             </p>
             <div className="flex gap-3">
               <button type="button" onClick={() => { setIsConfirmCatOpen(false); setDeleteCatId(null); }}
-                className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors">
+                className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-850 text-sm transition-colors">
                 Cancelar
               </button>
               <button type="button" onClick={handleDeleteCategory}

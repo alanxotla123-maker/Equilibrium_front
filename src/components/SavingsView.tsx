@@ -165,18 +165,18 @@ export default function SavingsView() {
   const mainMonthsToGoal = Math.ceil((mainGoal.goalAmount - mainGoal.currentAmount) / monthlySaving) || 2;
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto bg-slate-100/40 select-none">
+    <div className="flex-1 p-8 overflow-y-auto bg-slate-100/40 dark:bg-slate-950/40 select-none">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-3xl font-extrabold text-slate-800">Metas de Ahorro</h2>
-          <p className="text-sm text-slate-500 font-medium mt-1">
+          <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">Metas de Ahorro</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
             Optimiza tus metas financieras y visualiza tu capital en tiempo real.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="p-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-500 rounded-xl transition-all shadow-sm">
+          <button className="p-3 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 rounded-xl transition-all shadow-sm">
             <Bell className="w-5 h-5 text-indigo-500" />
           </button>
           <button
@@ -192,23 +192,23 @@ export default function SavingsView() {
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
         {/* Sliders Card */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="p-2 rounded-xl bg-indigo-55 text-indigo-600 bg-indigo-50">
+              <span className="p-2 rounded-xl bg-indigo-55 text-indigo-600 bg-indigo-50 dark:bg-indigo-950/30">
                 <Target className="w-5 h-5" />
               </span>
               <div>
-                <h3 className="font-extrabold text-slate-800 text-base leading-tight">Inteligencia Financiera</h3>
-                <p className="text-xs text-slate-400 font-medium">Ajusta tu capacidad para calcular impactos en tiempo real.</p>
+                <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-base leading-tight">Inteligencia Financiera</h3>
+                <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">Ajusta tu capacidad para calcular impactos en tiempo real.</p>
               </div>
             </div>
 
             {/* Slider */}
             <div className="space-y-4 py-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-bold text-slate-500">Ahorro Mensual</span>
-                <span className="text-xl font-extrabold text-indigo-600">${monthlySaving}</span>
+                <span className="text-sm font-bold text-slate-500 dark:text-slate-400">Ahorro Mensual</span>
+                <span className="text-xl font-extrabold text-indigo-600 dark:text-indigo-400">${monthlySaving}</span>
               </div>
               <input
                 type="range"
@@ -217,21 +217,21 @@ export default function SavingsView() {
                 step="50"
                 value={monthlySaving}
                 onChange={(e) => setMonthlySaving(parseInt(e.target.value))}
-                className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-600"
               />
-              <div className="flex justify-between text-[10px] font-bold text-slate-400">
+              <div className="flex justify-between text-[10px] font-bold text-slate-400 dark:text-slate-500">
                 <span>$100</span>
                 <span>$5,000</span>
               </div>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-100">
+          <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-bold text-slate-500">Fuerza de Ahorro</span>
-              <span className="text-xs font-extrabold text-emerald-600">Optimizado</span>
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Fuerza de Ahorro</span>
+              <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-450">Optimizado</span>
             </div>
-            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
               <div className="h-full bg-emerald-400 rounded-full" style={{ width: '85%' }}></div>
             </div>
           </div>
@@ -293,7 +293,7 @@ export default function SavingsView() {
       </div>
 
       {/* Target Goals grid */}
-      <h3 className="font-extrabold text-slate-800 text-lg mb-4">Tus Objetivos de Compra</h3>
+      <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-lg mb-4">Tus Objetivos de Compra</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {savings.map((saving) => {
           const progress = Math.min(Math.round((saving.currentAmount / saving.goalAmount) * 100), 100);
@@ -302,17 +302,17 @@ export default function SavingsView() {
             <div
               key={saving.id}
               onClick={() => openEditModal(saving)}
-              className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-slate-300 hover:scale-[1.01] cursor-pointer transition-all duration-200 flex flex-col justify-between group"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-md dark:hover:shadow-indigo-900/10 hover:border-slate-300 dark:hover:border-slate-700 hover:scale-[1.01] cursor-pointer transition-all duration-200 flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-slate-500 shadow-inner">
+                    <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-550 shadow-inner">
                       🛍️
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-800 text-sm">{saving.title}</h4>
-                      <span className="text-xs text-slate-400 font-bold">${saving.goalAmount}</span>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm">{saving.title}</h4>
+                      <span className="text-xs text-slate-400 dark:text-slate-500 font-bold">${saving.goalAmount}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 z-10">
@@ -321,7 +321,7 @@ export default function SavingsView() {
                         e.stopPropagation();
                         openEditModal(saving);
                       }}
-                      className="text-slate-400 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 border border-slate-200/60 p-1.5 rounded-lg transition-all"
+                      className="text-slate-400 hover:text-indigo-600 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 border border-slate-200/60 dark:border-slate-700 p-1.5 rounded-lg transition-all"
                       title="Editar meta"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -331,7 +331,7 @@ export default function SavingsView() {
                         e.stopPropagation();
                         openConfirmModal(saving.id);
                       }}
-                      className="text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200/60 p-1.5 rounded-lg transition-all"
+                      className="text-slate-400 hover:text-rose-600 bg-slate-50 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-slate-200/60 dark:border-slate-700 p-1.5 rounded-lg transition-all"
                       title="Eliminar meta"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -340,7 +340,7 @@ export default function SavingsView() {
                 </div>
               </div>
 
-              <div className="space-y-3 pt-3 border-t border-slate-100">
+              <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                 {/* Quick savings adjust row */}
                 <div className="flex justify-between items-center text-xs font-bold text-slate-500">
                   {adjustingGoalId === saving.id ? (
@@ -354,7 +354,7 @@ export default function SavingsView() {
                         placeholder="Monto"
                         value={adjustAmount}
                         onChange={(e) => setAdjustAmount(e.target.value)}
-                        className="w-16 px-2 py-1 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                        className="w-16 px-2 py-1 border border-slate-200 dark:border-slate-750 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                         autoFocus
                       />
                       <button
@@ -377,7 +377,7 @@ export default function SavingsView() {
                     </div>
                   ) : (
                     <>
-                      <span>Ahorrado: <strong className="text-slate-800">${saving.currentAmount}</strong></span>
+                      <span>Ahorrado: <strong className="text-slate-800 dark:text-slate-200">${saving.currentAmount}</strong></span>
                       <div className="flex items-center gap-1.5 z-10">
                         <button
                           onClick={(e) => {
@@ -386,7 +386,7 @@ export default function SavingsView() {
                             setAdjustType('sub');
                             setAdjustAmount('');
                           }}
-                          className="w-6 h-6 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100/50 rounded-lg flex items-center justify-center transition-colors shadow-sm"
+                          className="w-6 h-6 bg-rose-50 dark:bg-rose-950/20 hover:bg-rose-100 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100/50 dark:border-rose-900/35 rounded-lg flex items-center justify-center transition-colors shadow-sm"
                           title="Restar ahorro"
                         >
                           <Minus className="w-3.5 h-3.5" />
@@ -398,7 +398,7 @@ export default function SavingsView() {
                             setAdjustType('add');
                             setAdjustAmount('');
                           }}
-                          className="w-6 h-6 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-100/50 rounded-lg flex items-center justify-center transition-colors shadow-sm"
+                          className="w-6 h-6 bg-emerald-50 dark:bg-emerald-950/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100/50 dark:border-emerald-900/35 rounded-lg flex items-center justify-center transition-colors shadow-sm"
                           title="Sumar ahorro"
                         >
                           <Plus className="w-3.5 h-3.5" />
@@ -408,14 +408,14 @@ export default function SavingsView() {
                   )}
                 </div>
 
-                <div className="flex justify-between items-center text-xs font-bold text-slate-400">
+                <div className="flex justify-between items-center text-xs font-bold text-slate-400 dark:text-slate-500">
                   <span>Progreso</span>
-                  <span className="text-indigo-600">{progress}%</span>
+                  <span className="text-indigo-600 dark:text-indigo-400">{progress}%</span>
                 </div>
-                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div className="h-full bg-indigo-600 rounded-full" style={{ width: `${progress}%` }}></div>
                 </div>
-                <div className="text-[10px] font-bold text-slate-400 flex items-center justify-between">
+                <div className="text-[10px] font-bold text-slate-400 dark:text-slate-550 flex items-center justify-between">
                   <span>Faltan {monthsLeft > 0 ? `${monthsLeft} meses` : 'Completado'}</span>
                   <span>{saving.category?.name || 'Gral'}</span>
                 </div>
@@ -426,16 +426,16 @@ export default function SavingsView() {
       </div>
 
       {/* Trajectory capital chart */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="font-extrabold text-slate-800 text-lg">Trayectoria de Capital</h3>
-            <p className="text-xs text-slate-400 font-semibold mt-0.5">
+            <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-lg">Trayectoria de Capital</h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
               Proyección de crecimiento a 12 meses basado en el ahorro mensual.
             </p>
           </div>
-          <div className="flex rounded-xl bg-slate-100 p-1 text-xs font-bold text-slate-500 border border-slate-200/50">
-            <button className="px-3 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600">12 Meses</button>
+          <div className="flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 text-xs font-bold text-slate-500 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50">
+            <button className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300">12 Meses</button>
             <button className="px-3 py-1.5 rounded-lg">24 Meses</button>
           </div>
         </div>
@@ -455,21 +455,21 @@ export default function SavingsView() {
 
       {/* Add Savings Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 transform transition-all">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-800 transform transition-all">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-extrabold text-slate-800 text-xl flex items-center gap-2">
+              <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-xl flex items-center gap-2">
                 <Plus className="w-5 h-5 text-indigo-500" />
                 Crear Nueva Meta
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors">
+              <button onClick={() => setIsModalOpen(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-850 rounded-xl text-slate-400 dark:text-slate-500 transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateSaving} className="space-y-4">
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                   <Edit2 className="w-3.5 h-3.5 text-indigo-500" />
                   Nombre de la Meta
                 </label>
@@ -479,13 +479,13 @@ export default function SavingsView() {
                   placeholder="Ej: MacBook Pro M3"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Target className="w-3.5 h-3.5 text-indigo-500" />
                     Monto Objetivo ($)
                   </label>
@@ -496,12 +496,12 @@ export default function SavingsView() {
                     placeholder="Ej: 2400"
                     value={goalAmount}
                     onChange={(e) => setGoalAmount(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                   />
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <TrendingUp className="w-3.5 h-3.5 text-indigo-500" />
                     Ahorrado Inicial ($)
                   </label>
@@ -511,14 +511,14 @@ export default function SavingsView() {
                     placeholder="Ej: 1000"
                     value={currentAmount}
                     onChange={(e) => setCurrentAmount(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Calendar className="w-3.5 h-3.5 text-indigo-500" />
                     Fecha Límite (Opcional)
                   </label>
@@ -526,19 +526,19 @@ export default function SavingsView() {
                     type="date"
                     value={targetDate}
                     onChange={(e) => setTargetDate(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-105 bg-white dark:bg-slate-850"
                   />
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Tag className="w-3.5 h-3.5 text-indigo-500" />
                     Categoría
                   </label>
                   <select
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                   >
                     <option value="">Selecciona categoría</option>
                     {categories.map((cat) => (
@@ -550,11 +550,11 @@ export default function SavingsView() {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-slate-100">
+              <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-350 font-bold hover:bg-slate-50 dark:hover:bg-slate-850 text-sm transition-colors"
                 >
                   Cancelar
                 </button>
@@ -572,13 +572,13 @@ export default function SavingsView() {
 
       {/* Confirmation Modal */}
       {isConfirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 text-center">
-            <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-800 text-center">
+            <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/30 text-rose-600 flex items-center justify-center mx-auto mb-4">
               <span className="text-xl">⚠️</span>
             </div>
-            <h3 className="font-extrabold text-slate-800 text-lg mb-2">¿Eliminar Meta?</h3>
-            <p className="text-sm text-slate-500 font-medium mb-6">
+            <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-lg mb-2">¿Eliminar Meta?</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-6">
               Esta acción no se puede deshacer. ¿Seguro que deseas eliminar esta meta de ahorro?
             </p>
             <div className="flex gap-3">
@@ -588,7 +588,7 @@ export default function SavingsView() {
                   setIsConfirmOpen(false);
                   setDeleteSavingId(null);
                 }}
-                className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-55 text-sm transition-colors"
+                className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-55 dark:hover:bg-slate-850 text-sm transition-colors"
               >
                 Cancelar
               </button>
@@ -606,24 +606,24 @@ export default function SavingsView() {
 
       {/* Edit Savings Modal */}
       {isEditModalOpen && selectedSaving && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 transform transition-all">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-800 transform transition-all">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-extrabold text-slate-800 text-xl flex items-center gap-2">
+              <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-xl flex items-center gap-2">
                 <Edit2 className="w-5 h-5 text-indigo-500" />
                 Modificar Meta de Ahorro
               </h3>
               <button onClick={() => {
                 setIsEditModalOpen(false);
                 setSelectedSaving(null);
-              }} className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors">
+              }} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-850 rounded-xl text-slate-400 dark:text-slate-500 transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleUpdateSaving} className="space-y-4">
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                   <Edit2 className="w-3.5 h-3.5 text-indigo-500" />
                   Nombre de la Meta
                 </label>
@@ -632,13 +632,13 @@ export default function SavingsView() {
                   required
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Target className="w-3.5 h-3.5 text-indigo-500" />
                     Monto Objetivo ($)
                   </label>
@@ -648,12 +648,12 @@ export default function SavingsView() {
                     min="1"
                     value={editGoalAmount}
                     onChange={(e) => setEditGoalAmount(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                   />
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <TrendingUp className="w-3.5 h-3.5 text-indigo-500" />
                     Ahorro Acumulado ($)
                   </label>
@@ -662,20 +662,20 @@ export default function SavingsView() {
                     min="0"
                     value={editCurrentAmount}
                     onChange={(e) => setEditCurrentAmount(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                   />
                 </div>
               </div>
 
               {/* Quick Adjust inside Edit Modal */}
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100/80 space-y-2">
-                <span className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Ajuste Rápido de Ahorro</span>
+              <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-2xl border border-slate-100/80 dark:border-slate-800 space-y-2">
+                <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ajuste Rápido de Ahorro</span>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
                     placeholder="Monto a sumar/restar"
                     id="modalAdjustAmount"
-                    className="flex-1 px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                   />
                   <button
                     type="button"
@@ -688,7 +688,7 @@ export default function SavingsView() {
                         inputEl.value = '';
                       }
                     }}
-                    className="flex items-center gap-1 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/50 font-bold text-xs rounded-xl transition-all shadow-sm"
+                    className="flex items-center gap-1 px-3 py-2 bg-rose-50 dark:bg-rose-950/20 hover:bg-rose-100 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-450 border border-rose-200/50 dark:border-rose-900/40 font-bold text-xs rounded-xl transition-all shadow-sm"
                     title="Quitar ahorro"
                   >
                     <Minus className="w-3.5 h-3.5" />
@@ -705,7 +705,7 @@ export default function SavingsView() {
                         inputEl.value = '';
                       }
                     }}
-                    className="flex items-center gap-1 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-200/50 font-bold text-xs rounded-xl transition-all shadow-sm"
+                    className="flex items-center gap-1 px-3 py-2 bg-emerald-50 dark:bg-emerald-950/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 text-emerald-600 dark:text-emerald-450 border border-emerald-200/50 dark:border-emerald-900/40 font-bold text-xs rounded-xl transition-all shadow-sm"
                     title="Agregar ahorro"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -716,7 +716,7 @@ export default function SavingsView() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Calendar className="w-3.5 h-3.5 text-indigo-500" />
                     Fecha Límite (Opcional)
                   </label>
@@ -724,19 +724,19 @@ export default function SavingsView() {
                     type="date"
                     value={editTargetDate}
                     onChange={(e) => setEditTargetDate(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-105 bg-white dark:bg-slate-850"
                   />
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <Tag className="w-3.5 h-3.5 text-indigo-500" />
                     Categoría
                   </label>
                   <select
                     value={editCategoryId}
                     onChange={(e) => setEditCategoryId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-850"
                   >
                     <option value="">Selecciona categoría</option>
                     {categories.map((cat) => (
@@ -748,14 +748,14 @@ export default function SavingsView() {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-slate-100">
+              <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => {
                     setIsEditModalOpen(false);
                     setSelectedSaving(null);
                   }}
-                  className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 text-sm transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-350 font-bold hover:bg-slate-50 dark:hover:bg-slate-850 text-sm transition-colors"
                 >
                   Cancelar
                 </button>

@@ -55,11 +55,10 @@ export default function LoginView({ onLogin }: LoginViewProps) {
   const handleGoogleLogin = () => {
     onLogin('alanxotla123@gmail.com', keepLoggedIn);
   };
-
   return (
-    <div className="flex h-screen w-screen bg-slate-50 overflow-hidden font-sans select-none">
+    <div className="flex h-screen w-screen bg-slate-50 dark:bg-slate-950 overflow-hidden font-sans select-none">
       {/* Left Banner Section */}
-      <div className="hidden lg:flex w-1/2 bg-indigo-700 text-white flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex w-1/2 bg-indigo-700 dark:bg-slate-900 dark:border-r dark:border-slate-850 text-white flex-col justify-between p-12 relative overflow-hidden">
         {/* Subtle decorative grid/circles */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_50%)]" />
         
@@ -76,7 +75,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
           <h2 className="text-4xl font-extrabold leading-tight">
             Domina tu tiempo y capital con precisión absoluta.
           </h2>
-          <p className="text-base text-indigo-100 font-medium leading-relaxed">
+          <p className="text-base text-indigo-100 dark:text-slate-350 font-medium leading-relaxed">
             La plataforma definitiva para individuos de alto rendimiento que buscan claridad cognitiva y organización financiera en un solo ecosistema funcional.
           </p>
           
@@ -94,26 +93,26 @@ export default function LoginView({ onLogin }: LoginViewProps) {
         <div className="flex items-center gap-4 z-10 mt-auto">
           {/* Avatars Stack */}
           <div className="flex -space-x-2">
-            <div className="w-8 h-8 rounded-full border-2 border-indigo-700 bg-slate-400 flex items-center justify-center text-[10px] font-bold">AR</div>
-            <div className="w-8 h-8 rounded-full border-2 border-indigo-700 bg-emerald-500 flex items-center justify-center text-[10px] font-bold">JD</div>
-            <div className="w-8 h-8 rounded-full border-2 border-indigo-700 bg-indigo-500 flex items-center justify-center text-[10px] font-bold">LC</div>
+            <div className="w-8 h-8 rounded-full border-2 border-indigo-700 dark:border-slate-900 bg-slate-400 flex items-center justify-center text-[10px] font-bold">AR</div>
+            <div className="w-8 h-8 rounded-full border-2 border-indigo-700 dark:border-slate-900 bg-emerald-500 flex items-center justify-center text-[10px] font-bold">JD</div>
+            <div className="w-8 h-8 rounded-full border-2 border-indigo-700 dark:border-slate-900 bg-indigo-500 flex items-center justify-center text-[10px] font-bold">LC</div>
           </div>
-          <p className="text-xs text-indigo-200 font-semibold">
+          <p className="text-xs text-indigo-200 dark:text-slate-400 font-semibold">
             Únete a más de 10,000 profesionales.
           </p>
         </div>
       </div>
 
       {/* Right Form Section */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white md:p-16 relative">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white dark:bg-slate-900 md:p-16 relative">
         <div className="w-full max-w-md space-y-8">
           
           {/* Title Headers */}
           <div>
-            <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">
+            <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
               {isRegister ? 'Crear una cuenta gratis' : 'Bienvenido de nuevo'}
             </h2>
-            <p className="text-sm text-slate-500 font-semibold mt-2">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold mt-2">
               {isRegister 
                 ? 'Introduce tus datos para registrarte y acceder a tu panel.' 
                 : 'Introduce tus credenciales para acceder a tu panel.'}
@@ -122,7 +121,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
 
           {/* Error Alert Banner */}
           {error && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-600 rounded-xl p-3.5 text-xs font-bold flex items-center gap-2.5 animate-headShake">
+            <div className="bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 rounded-xl p-3.5 text-xs font-bold flex items-center gap-2.5 animate-headShake">
               <span className="w-2 h-2 rounded-full bg-rose-500 flex-shrink-0 animate-pulse" />
               <span>{error}</span>
             </div>
@@ -132,7 +131,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
           <button
             onClick={handleGoogleLogin}
             type="button"
-            className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm transition-all shadow-sm"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-350 font-bold text-sm transition-all shadow-sm"
           >
             {/* Google Icon SVG */}
             <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
@@ -158,11 +157,11 @@ export default function LoginView({ onLogin }: LoginViewProps) {
 
           {/* Divider line */}
           <div className="flex items-center my-6">
-            <div className="flex-1 h-px bg-slate-200" />
-            <span className="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+            <span className="px-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               o vía correo electrónico
             </span>
-            <div className="flex-1 h-px bg-slate-200" />
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
           </div>
 
           {/* Login Form */}
@@ -170,7 +169,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
             {/* Name Field (Register Mode Only) */}
             {isRegister && (
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                   Nombre completo
                 </label>
                 <div className="relative">
@@ -185,7 +184,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
                     placeholder="Tu nombre completo"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-semibold text-slate-800"
+                    className="w-full pl-12 pr-4 py-3.5 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 dark:focus:border-indigo-500 text-sm font-semibold text-slate-800 dark:bg-slate-850 dark:text-slate-100"
                   />
                 </div>
               </div>
@@ -193,7 +192,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
 
             {/* Email Field */}
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                 Correo electrónico
               </label>
               <div className="relative">
@@ -206,7 +205,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
                   placeholder="nombre@ejemplo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-semibold text-slate-800"
+                  className="w-full pl-12 pr-4 py-3.5 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 dark:focus:border-indigo-500 text-sm font-semibold text-slate-800 dark:bg-slate-850 dark:text-slate-100"
                 />
               </div>
             </div>
@@ -214,13 +213,13 @@ export default function LoginView({ onLogin }: LoginViewProps) {
             {/* Password Field */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                   Contraseña
                 </label>
                 {!isRegister && (
                   <a
                     href="#"
-                    className="text-xs font-bold text-indigo-600 hover:text-indigo-700 hover:underline"
+                    className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline"
                   >
                     ¿Olvidaste tu contraseña?
                   </a>
@@ -236,12 +235,12 @@ export default function LoginView({ onLogin }: LoginViewProps) {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-12 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm font-semibold text-slate-800"
+                  className="w-full pl-12 pr-12 py-3.5 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 dark:focus:border-indigo-500 text-sm font-semibold text-slate-800 dark:bg-slate-850 dark:text-slate-100"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-650 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-650 dark:hover:text-slate-350 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -255,9 +254,9 @@ export default function LoginView({ onLogin }: LoginViewProps) {
                   type="checkbox"
                   checked={keepLoggedIn}
                   onChange={(e) => setKeepLoggedIn(e.target.checked)}
-                  className="rounded border-slate-350 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                  className="rounded border-slate-350 dark:border-slate-700 dark:bg-slate-850 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
                 />
-                <span className="text-xs font-bold text-slate-500">Mantener sesión iniciada</span>
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Mantener sesión iniciada</span>
               </label>
             </div>
 
@@ -272,7 +271,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
 
           {/* Toggle Register link */}
           <div className="text-center pt-4">
-            <p className="text-xs text-slate-500 font-bold">
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-bold">
               {isRegister ? '¿Ya tienes una cuenta? ' : '¿No tienes una cuenta? '}
               <button
                 type="button"
@@ -280,7 +279,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
                   setIsRegister(!isRegister);
                   setError('');
                 }}
-                className="text-indigo-600 hover:underline font-bold"
+                className="text-indigo-600 dark:text-indigo-400 hover:underline font-bold"
               >
                 {isRegister ? 'Iniciar Sesión' : 'Crear cuenta gratis'}
               </button>
