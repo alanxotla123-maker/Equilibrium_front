@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, X, AlertCircle, Calendar, Tag, Wallet, ArrowUpRight, ArrowDownRight, Layers, CreditCard, Shield, TrendingUp, DollarSign, Target, Check } from 'lucide-react';
+import { Plus, Trash2, X, AlertCircle, Calendar, Tag, Wallet, ArrowUpRight, ArrowDownRight, Layers, CreditCard, Shield, TrendingUp, DollarSign, Target, Check, HelpCircle } from 'lucide-react';
 import { api, Transaction, Category, Card, Saving } from '../lib/api';
 
 type TabType = 'diario' | 'tarjetas' | 'ahorros';
@@ -160,7 +160,7 @@ export default function TransactionsView() {
 
     try {
       await api.post('/transactions', {
-        type: 'ingreso', // Payments count as positive cash flow/reductions to card debt
+        type: 'ingreso',
         amount: parseFloat(paymentAmount),
         date: new Date().toISOString(),
         description: `Abono manual a tarjeta ${selectedCard.name}`,
@@ -177,22 +177,22 @@ export default function TransactionsView() {
     }
   };
 
-  // Quick Pay Full Balance Handler
-  const handlePayFullBalance = async (card: Card, currentDebt: number) => {
-    if (currentDebt <= 0) return;
+  // Quick Pay Full Amount Handler (billed cycle balance or total debt)
+  const handlePayBalance = async (card: Card, amountToPay: number, isTotalDebt: boolean) => {
+    if (amountToPay <= 0) return;
 
     try {
       await api.post('/transactions', {
         type: 'ingreso',
-        amount: currentDebt,
+        amount: amountToPay,
         date: new Date().toISOString(),
-        description: `Pago total a tarjeta ${card.name}`,
+        description: isTotalDebt ? `Pago total de deuda de tarjeta ${card.name}` : `Pago del saldo facturado de tarjeta ${card.name}`,
         cardId: card.id
       });
 
       fetchData();
     } catch (error) {
-      console.error('Error recording full card payment:', error);
+      console.error('Error recording card payment:', error);
     }
   };
 
@@ -291,6 +291,62 @@ export default function TransactionsView() {
     return Math.max(0, initial + cardGastos - cardIngresos);
   };
 
+  // Billing Cycle calculation (what needs to be paid for the current billed period)
+  const getBilledCycleRange = (card: Card) => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth(); // 0-11
+    const currentDay = now.getDate();
+
+    let cycleStart = new Date();
+    let cycleEnd = new Date();
+    let paymentDue = new Date();
+
+    const closing = card.closingDay;
+    const due = card.dueDate;
+
+    if (closing > due) {
+      if (currentDay >= closing) {
+        cycleStart = new Date(currentYear, currentMonth - 1, closing + 1);
+        cycleEnd = new Date(currentYear, currentMonth, closing, 23, 59, 59);
+        paymentDue = new Date(currentYear, currentMonth + 1, due);
+      } else if (currentDay <= due) {
+        cycleStart = new Date(currentYear, currentMonth - 2, closing + 1);
+        cycleEnd = new Date(currentYear, currentMonth - 1, closing, 23, 59, 59);
+        paymentDue = new Date(currentYear, currentMonth, due);
+      } else {
+        return null;
+      }
+    } else {
+      if (currentDay >= closing && currentDay <= due) {
+        cycleStart = new Date(currentYear, currentMonth - 1, closing + 1);
+        cycleEnd = new Date(currentYear, currentMonth, closing, 23, 59, 59);
+        paymentDue = new Date(currentYear, currentMonth, due);
+      } else {
+        return null;
+      }
+    }
+
+    return { start: cycleStart, end: cycleEnd, due: paymentDue };
+  };
+
+  // Get Billed Amount (sum of transactions strictly inside active cycle)
+  const getCardBilledAmount = (card: Card) => {
+    const range = getBilledCycleRange(card);
+    if (!range) return 0; // Not inside payment window or no active cycle to pay
+
+    // Sum gastos minus ingresos inside the cycle dates
+    const cardId = card.id;
+    const cycleGastos = transactions
+      .filter(t => t.type === 'gasto' && t.cardId === cardId && new Date(t.date) >= range.start && new Date(t.date) <= range.end)
+      .reduce((acc, curr) => acc + Number(curr.amount), 0);
+    const cycleIngresos = transactions
+      .filter(t => t.type === 'ingreso' && t.cardId === cardId && new Date(t.date) >= range.start && new Date(t.date) <= range.end)
+      .reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+    return Math.max(0, cycleGastos - cycleIngresos);
+  };
+
   // Total credit cards debt
   const totalCardDebt = cards.reduce((acc, curr) => acc + getCardUsedBalance(curr), 0);
 
@@ -320,7 +376,7 @@ export default function TransactionsView() {
     return t.cardId === selectedCardId;
   });
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | Date) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
       day: 'numeric',
       month: 'short',
@@ -330,15 +386,7 @@ export default function TransactionsView() {
 
   // Check if current day of month is in the payment period of the card
   const isPaymentPeriodActive = (card: Card) => {
-    const currentDay = new Date().getDate();
-    const closing = card.closingDay;
-    const due = card.dueDate;
-
-    if (closing < due) {
-      return currentDay >= closing && currentDay <= due;
-    } else {
-      return currentDay >= closing || currentDay <= due;
-    }
+    return getBilledCycleRange(card) !== null;
   };
 
   // Card color presets
@@ -554,7 +602,7 @@ export default function TransactionsView() {
                   <h3 className="text-3xl font-extrabold text-rose-600 tracking-tight">
                     ${totalCardDebt.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-semibold mt-1">Suma acumulada por pagar en tus tarjetas</p>
+                  <p className="text-[10px] text-slate-400 font-semibold mt-1">Suma acumulada por pagar en tus tarjetas (Histórico + Cargos)</p>
                 </div>
                 <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Tarjetas Activas</span>
@@ -582,12 +630,15 @@ export default function TransactionsView() {
                     <h3 className="text-lg font-extrabold text-slate-800">Tus Tarjetas</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {cards.map((card, index) => {
-                        const used = getCardUsedBalance(card);
+                        const totalDebt = getCardUsedBalance(card);
+                        const billedMonth = getCardBilledAmount(card);
                         const limit = Number(card.creditLimit);
-                        const available = Math.max(0, limit - used);
-                        const usedPercentage = Math.min(100, Math.round((used / limit) * 100)) || 0;
+                        const available = Math.max(0, limit - totalDebt);
+                        const usedPercentage = Math.min(100, Math.round((totalDebt / limit) * 100)) || 0;
                         const gradient = cardGradients[index % cardGradients.length];
-                        const isPaymentActive = isPaymentPeriodActive(card) && used > 0;
+                        
+                        const range = getBilledCycleRange(card);
+                        const isPaymentActive = range !== null && billedMonth > 0;
 
                         return (
                           <div key={card.id} className="space-y-2">
@@ -616,17 +667,21 @@ export default function TransactionsView() {
                                 </button>
                               </div>
 
-                              <div className="space-y-2">
+                              <div className="space-y-1">
                                 <div className="flex justify-between items-baseline">
-                                  <span className="text-[10px] font-bold text-white/80">Saldo Gastado</span>
-                                  <span className="text-xl font-extrabold">${used.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                                  <span className="text-[9px] font-bold text-white/85 flex items-center gap-1">Deuda Total <span title="Saldo inicial + cargos históricos"><HelpCircle className="w-3 h-3 text-white/60" /></span></span>
+                                  <span className="text-lg font-extrabold">${totalDebt.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                                </div>
+                                <div className="flex justify-between items-baseline">
+                                  <span className="text-[9px] font-bold text-white/85">Billed Cycle (Corte)</span>
+                                  <span className="text-sm font-extrabold text-indigo-200">${billedMonth.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
                                 </div>
 
-                                <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+                                <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden mt-1">
                                   <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${usedPercentage}%` }} />
                                 </div>
 
-                                <div className="flex justify-between text-[9px] font-bold text-white/70">
+                                <div className="flex justify-between text-[9px] font-bold text-white/70 mt-1">
                                   <span>Disponible: ${available.toLocaleString('es-ES')}</span>
                                   <span>Límite: ${limit.toLocaleString('es-ES')}</span>
                                 </div>
@@ -634,34 +689,39 @@ export default function TransactionsView() {
                             </div>
 
                             {/* Alert/Warning Period Message */}
-                            {isPaymentActive && (
+                            {isPaymentActive && range && (
                               <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-3 text-[11px] font-bold flex flex-col gap-2">
-                                <p className="flex items-center gap-1.5">
-                                  <AlertCircle className="w-3.5 h-3.5 text-rose-600 flex-shrink-0" />
-                                  Período de pago activo. Debes abonar ${used.toLocaleString('es-ES')} antes del día {card.dueDate}.
-                                </p>
+                                <div className="flex items-start gap-1.5">
+                                  <AlertCircle className="w-3.5 h-3.5 text-rose-600 flex-shrink-0 mt-0.5" />
+                                  <div>
+                                    <p className="text-rose-900">Período de pago activo.</p>
+                                    <p className="text-rose-700/90 font-medium mt-0.5">
+                                      Debes pagar el saldo facturado del ciclo ({formatDate(range.start)} al {formatDate(range.end)}) de <strong>${billedMonth.toLocaleString('es-ES')}</strong> antes del {formatDate(range.due)}.
+                                    </p>
+                                  </div>
+                                </div>
                                 <div className="flex gap-2">
                                   <button
                                     onClick={() => {
                                       setPaymentCardId(card.id);
                                       setIsPaymentModalOpen(true);
                                     }}
-                                    className="flex-1 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors"
+                                    className="flex-1 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors text-center text-[10px]"
                                   >
-                                    Abonar
+                                    Abonar Cantidad
                                   </button>
                                   <button
-                                    onClick={() => handlePayFullBalance(card, used)}
-                                    className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+                                    onClick={() => handlePayBalance(card, billedMonth, false)}
+                                    className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-center text-[10px]"
                                   >
-                                    Liquidar Total
+                                    Pagar Saldo Mes (${billedMonth.toLocaleString('es-ES')})
                                   </button>
                                 </div>
                               </div>
                             )}
                             
                             {/* Action Buttons for Normal Mode */}
-                            {!isPaymentActive && used > 0 && (
+                            {(!isPaymentActive || billedMonth <= 0) && totalDebt > 0 && (
                               <div className="flex gap-2 mt-1">
                                 <button
                                   onClick={() => {
@@ -670,13 +730,13 @@ export default function TransactionsView() {
                                   }}
                                   className="flex-1 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-[11px] rounded-xl transition-colors border border-slate-300/30"
                                 >
-                                  Registrar Pago
+                                  Abonar Pago
                                 </button>
                                 <button
-                                  onClick={() => handlePayFullBalance(card, used)}
+                                  onClick={() => handlePayBalance(card, totalDebt, true)}
                                   className="flex-1 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[11px] rounded-xl transition-colors border border-emerald-200/30"
                                 >
-                                  Pagar Todo
+                                  Liquidar Deuda Total
                                 </button>
                               </div>
                             )}
@@ -969,7 +1029,7 @@ export default function TransactionsView() {
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Deuda Actual / Lo que ya debo ($)</label>
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Gastos Históricos / Saldo Inicial ($)</label>
                   <input
                     type="number"
                     min="0"
