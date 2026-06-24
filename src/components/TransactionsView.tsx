@@ -721,8 +721,8 @@ export default function TransactionsView() {
                                 </div>
 
                                 <div className="flex justify-between text-[9px] font-bold text-white/70 mt-1">
-                                  <span>Disponible: ${available.toLocaleString('es-ES')}</span>
-                                  <span>Límite: ${limit.toLocaleString('es-ES')}</span>
+                                  <span>Disponible: ${available.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                  <span>Límite: ${limit.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                 </div>
                               </div>
                             </div>
