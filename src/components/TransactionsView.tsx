@@ -419,6 +419,12 @@ export default function TransactionsView() {
     });
   };
 
+  const formatMoney = (amount: number) => {
+    const parts = amount.toFixed(2).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return parts.join(',');
+  };
+
   // Check if current day of month is in the payment period of the card
   const isPaymentPeriodActive = (card: Card) => {
     return getBilledCycleRange(card) !== null;
@@ -723,11 +729,11 @@ export default function TransactionsView() {
                               <div className="space-y-1">
                                 <div className="flex justify-between items-baseline">
                                   <span className="text-[9px] font-bold text-white/85 flex items-center gap-1">Deuda Total <span title="Saldo inicial + cargos históricos"><HelpCircle className="w-3 h-3 text-white/60" /></span></span>
-                                  <span className="text-lg font-extrabold">${totalDebt.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                                  <span className="text-lg font-extrabold">${formatMoney(totalDebt)}</span>
                                 </div>
                                 <div className="flex justify-between items-baseline">
                                   <span className="text-[9px] font-bold text-white/85">Billed Cycle (Corte)</span>
-                                  <span className="text-sm font-extrabold text-indigo-200">${billedMonth.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                                  <span className="text-sm font-extrabold text-indigo-200">${formatMoney(billedMonth)}</span>
                                 </div>
 
                                 <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden mt-1">
@@ -735,8 +741,8 @@ export default function TransactionsView() {
                                 </div>
 
                                 <div className="flex justify-between text-[9px] font-bold text-white/70 mt-1">
-                                  <span>Disponible: ${available.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                                  <span>Límite: ${limit.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                  <span>Disponible: ${formatMoney(available)}</span>
+                                  <span>Límite: ${formatMoney(limit)}</span>
                                 </div>
                               </div>
                             </div>
