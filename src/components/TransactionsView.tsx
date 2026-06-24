@@ -378,6 +378,16 @@ export default function TransactionsView() {
   // Total savings accumulated
   const totalSavings = savings.reduce((acc, curr) => acc + Number(curr.currentAmount), 0);
 
+  // Total card expenses this month
+  const cardExpensesThisMonth = transactions
+    .filter(t => {
+      if (t.type !== 'gasto' || !t.cardId) return false;
+      const tDate = new Date(t.date);
+      const now = new Date();
+      return tDate.getFullYear() === now.getFullYear() && tDate.getMonth() === now.getMonth();
+    })
+    .reduce((acc, curr) => acc + Number(curr.amount), 0);
+
   // Filters for Tab 1 (Diario)
   const filteredTransactions = transactions.filter(t => {
     const matchesType = filterType === 'all' || t.type === filterType;
@@ -630,9 +640,13 @@ export default function TransactionsView() {
                   <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-1">Suma acumulada por pagar en tus tarjetas (Histórico + Cargos)</p>
                 </div>
                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">Tarjetas Activas</span>
-                  <h3 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">{cards.length}</h3>
-                  <p className="text-[10px] text-indigo-650 dark:text-indigo-400 font-bold mt-1">Línea de crédito total: ${cards.reduce((acc, curr) => acc + Number(curr.creditLimit), 0).toLocaleString('es-ES')}</p>
+                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">Gastado este Mes</span>
+                  <h3 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+                    ${cardExpensesThisMonth.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </h3>
+                  <p className="text-[10px] text-indigo-650 dark:text-indigo-400 font-bold mt-1">
+                    Suma de consumos con tarjeta en {new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
+                  </p>
                 </div>
               </div>
 
