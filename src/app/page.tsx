@@ -17,10 +17,20 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const handleViewChange = (view: string) => {
+    setCurrentView(view);
+    localStorage.setItem('equilibrium_view', view);
+  };
+
   useEffect(() => {
     const authState = localStorage.getItem('equilibrium_auth');
     if (authState === 'true') {
       setIsAuthenticated(true);
+    }
+
+    const savedView = localStorage.getItem('equilibrium_view');
+    if (savedView) {
+      setCurrentView(savedView);
     }
     
     // Check dark mode preference
@@ -64,7 +74,7 @@ export default function Home() {
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
-        return <DashboardView onViewChange={setCurrentView} />;
+        return <DashboardView onViewChange={handleViewChange} />;
       case 'calendario':
         return <CalendarView />;
       case 'tareas':
@@ -74,7 +84,7 @@ export default function Home() {
       case 'metas':
         return <SavingsView />;
       default:
-        return <DashboardView onViewChange={setCurrentView} />;
+        return <DashboardView onViewChange={handleViewChange} />;
     }
   };
 
@@ -112,7 +122,7 @@ export default function Home() {
       {/* Navigation Left Sidebar */}
       <Sidebar
         currentView={currentView}
-        onViewChange={setCurrentView}
+        onViewChange={handleViewChange}
         onLogout={handleLogout}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
