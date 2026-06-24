@@ -115,7 +115,7 @@ export default function TransactionsView() {
       setDescription('');
       setCategoryId('');
       setCardId('');
-      
+
       const today = new Date();
       const yyyy = today.getFullYear();
       const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -566,7 +566,7 @@ export default function TransactionsView() {
                   <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-[500px] overflow-y-auto">
                     {filteredTransactions.length === 0 ? (
                       <div className="px-6 py-20 text-center">
-                        <span className="text-4xl mb-3 block">💸</span>
+                        <span className="text-4xl mb-3 block"></span>
                         <p className="text-sm text-slate-400 dark:text-slate-500 font-semibold">No hay transacciones registradas</p>
                       </div>
                     ) : (
@@ -675,7 +675,7 @@ export default function TransactionsView() {
                         const available = Math.max(0, limit - totalDebt);
                         const usedPercentage = Math.min(100, Math.round((totalDebt / limit) * 100)) || 0;
                         const gradient = cardGradients[index % cardGradients.length];
-                        
+
                         const range = getBilledCycleRange(card);
                         const isPaymentActive = range !== null && billedMonth > 0;
 
@@ -772,7 +772,7 @@ export default function TransactionsView() {
                                 </div>
                               </div>
                             )}
-                            
+
                             {/* Action Buttons for Normal Mode */}
                             {(!isPaymentActive || billedMonth <= 0) && totalDebt > 0 && (
                               <div className="flex gap-2 mt-1">
