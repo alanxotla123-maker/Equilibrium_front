@@ -19,6 +19,7 @@ export default function DashboardView({ onViewChange }: DashboardViewProps) {
   const [dueDate, setDueDate] = useState('');
   const [noDueDate, setNoDueDate] = useState(false);
   const [categoryId, setCategoryId] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -43,6 +44,8 @@ export default function DashboardView({ onViewChange }: DashboardViewProps) {
 
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       await api.post('/tasks', {
         title,
@@ -59,6 +62,8 @@ export default function DashboardView({ onViewChange }: DashboardViewProps) {
       fetchData();
     } catch (err) {
       console.error('Error creating task:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -560,9 +565,10 @@ export default function DashboardView({ onViewChange }: DashboardViewProps) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Crear Tarea
+                  {isSubmitting ? 'Creando...' : 'Crear Tarea'}
                 </button>
               </div>
             </form>

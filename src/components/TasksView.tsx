@@ -34,6 +34,7 @@ export default function TasksView() {
   const [newCatColor, setNewCatColor] = useState('#6366f1');
   const [deleteCatId, setDeleteCatId] = useState<string | null>(null);
   const [isConfirmCatOpen, setIsConfirmCatOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -54,6 +55,8 @@ export default function TasksView() {
 
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       await api.post('/tasks', {
         title,
@@ -70,6 +73,8 @@ export default function TasksView() {
       fetchData();
     } catch (err) {
       console.error('Error creating task:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -122,6 +127,8 @@ export default function TasksView() {
   const handleUpdateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editTask) return;
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       await api.patch(`/tasks/${editTask.id}`, {
         title: editTitle,
@@ -134,12 +141,16 @@ export default function TasksView() {
       fetchData();
     } catch (err) {
       console.error('Error updating task:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleCreateCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCatName.trim()) return;
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       await api.post('/categories', { name: newCatName.trim(), color: newCatColor });
       setNewCatName('');
@@ -148,6 +159,8 @@ export default function TasksView() {
       fetchData();
     } catch (err) {
       console.error('Error creating category:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -588,9 +601,10 @@ export default function TasksView() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Crear Tarea
+                  {isSubmitting ? 'Creando...' : 'Crear Tarea'}
                 </button>
               </div>
             </form>
@@ -694,9 +708,10 @@ export default function TasksView() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Guardar Cambios
+                  {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
                 </button>
               </div>
             </form>
@@ -800,8 +815,9 @@ export default function TasksView() {
                   Cancelar
                 </button>
                 <button type="submit"
-                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10">
-                  Crear Categoría
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10 disabled:opacity-50 disabled:cursor-not-allowed">
+                  {isSubmitting ? 'Creando...' : 'Crear Categoría'}
                 </button>
               </div>
             </form>
