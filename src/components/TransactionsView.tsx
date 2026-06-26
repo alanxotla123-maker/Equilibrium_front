@@ -445,7 +445,7 @@ export default function TransactionsView() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3">
-            <span className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-455">
+            <span className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400">
               <Wallet className="w-6 h-6" />
             </span>
             Finanzas Personales
@@ -460,7 +460,7 @@ export default function TransactionsView() {
           {activeTab === 'diario' && (
             <button
               onClick={() => setIsTxModalOpen(true)}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/10 transition-all"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/10 transition-all"
             >
               <Plus className="w-4 h-4" />
               Registrar Gasto/Ingreso
@@ -491,7 +491,7 @@ export default function TransactionsView() {
       <div className="flex border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto gap-8">
         <button
           onClick={() => setActiveTab('diario')}
-          className={`pb-4 text-sm font-bold border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'diario' ? 'border-emerald-600 text-emerald-600 dark:text-emerald-400' : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-350'}`}
+          className={`pb-4 text-sm font-bold border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'diario' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-350'}`}
         >
           <Layers className="w-4 h-4" />
           Gastos Diarios
@@ -515,7 +515,7 @@ export default function TransactionsView() {
       {/* Loading Spinner */}
       {loading ? (
         <div className="flex justify-center items-center py-24">
-          <div className="w-10 h-10 rounded-full border-4 border-emerald-600 border-t-transparent animate-spin"></div>
+          <div className="w-10 h-10 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin"></div>
         </div>
       ) : (
         <>
@@ -561,7 +561,7 @@ export default function TransactionsView() {
                       <select
                         value={filterCategoryId}
                         onChange={(e) => setFilterCategoryId(e.target.value)}
-                        className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-750 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-850"
+                        className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-850"
                       >
                         <option value="all">Todas las Categorías</option>
                         {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
@@ -771,7 +771,7 @@ export default function TransactionsView() {
                                   </button>
                                   <button
                                     onClick={() => handlePayBalance(card, billedMonth, false)}
-                                    className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-center text-[10px]"
+                                    className="flex-1 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-center text-[10px]"
                                   >
                                     Pagar Saldo Mes (${billedMonth.toLocaleString('es-ES')})
                                   </button>
@@ -793,7 +793,7 @@ export default function TransactionsView() {
                                 </button>
                                 <button
                                   onClick={() => handlePayBalance(card, totalDebt, true)}
-                                  className="flex-1 py-1.5 bg-emerald-50 dark:bg-emerald-950/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 text-emerald-755 dark:text-emerald-400 font-bold text-[11px] rounded-xl transition-colors border border-emerald-200/30 dark:border-emerald-900/20"
+                                  className="flex-1 py-1.5 bg-indigo-50 dark:bg-indigo-950/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold text-[11px] rounded-xl transition-colors border border-indigo-200/30 dark:border-indigo-900/20"
                                 >
                                   Liquidar Deuda Total
                                 </button>
@@ -944,7 +944,7 @@ export default function TransactionsView() {
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-800 transform transition-all">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-xl flex items-center gap-2">
-                <Plus className="w-5 h-5 text-emerald-500" />
+                <Plus className="w-5 h-5 text-indigo-500" />
                 Registrar Transacción
               </h3>
               <button onClick={() => setIsTxModalOpen(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-400 dark:text-slate-500 transition-colors">
@@ -980,7 +980,7 @@ export default function TransactionsView() {
                   placeholder="0.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-sm font-medium text-slate-800 dark:text-slate-105 bg-white dark:bg-slate-850"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-sm font-medium text-slate-800 dark:text-slate-105 bg-white dark:bg-slate-850"
                 />
               </div>
 
@@ -991,7 +991,7 @@ export default function TransactionsView() {
                   placeholder="Ej: Almuerzo, Sueldo, Supermercado..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-sm font-medium text-slate-800 dark:text-slate-105 bg-white dark:bg-slate-850"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-sm font-medium text-slate-800 dark:text-slate-105 bg-white dark:bg-slate-850"
                 />
               </div>
 
@@ -1039,7 +1039,7 @@ export default function TransactionsView() {
 
               <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button type="button" onClick={() => setIsTxModalOpen(false)} className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-750 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-850 text-sm transition-colors">Cancelar</button>
-                <button type="submit" className="flex-1 py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 text-sm transition-colors shadow-md">Guardar Transacción</button>
+                <button type="submit" className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md">Guardar Transacción</button>
               </div>
             </form>
           </div>
@@ -1230,7 +1230,7 @@ export default function TransactionsView() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 text-sm transition-colors shadow-md shadow-emerald-600/10"
+                  className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 text-sm transition-colors shadow-md shadow-indigo-600/10"
                 >
                   Confirmar Pago
                 </button>

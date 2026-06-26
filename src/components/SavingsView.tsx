@@ -359,7 +359,7 @@ export default function SavingsView() {
                       />
                       <button
                         onClick={() => handleQuickAdjust(saving)}
-                        className="p-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors"
+                        className="p-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors"
                         title="Confirmar"
                       >
                         <Check className="w-3 h-3" />
@@ -398,7 +398,7 @@ export default function SavingsView() {
                             setAdjustType('add');
                             setAdjustAmount('');
                           }}
-                          className="w-6 h-6 bg-emerald-50 dark:bg-emerald-950/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100/50 dark:border-emerald-900/35 rounded-lg flex items-center justify-center transition-colors shadow-sm"
+                          className="w-6 h-6 bg-indigo-50 dark:bg-indigo-950/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/35 rounded-lg flex items-center justify-center transition-colors shadow-sm"
                           title="Sumar ahorro"
                         >
                           <Plus className="w-3.5 h-3.5" />
@@ -705,7 +705,7 @@ export default function SavingsView() {
                         inputEl.value = '';
                       }
                     }}
-                    className="flex items-center gap-1 px-3 py-2 bg-emerald-50 dark:bg-emerald-950/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 text-emerald-600 dark:text-emerald-450 border border-emerald-200/50 dark:border-emerald-900/40 font-bold text-xs rounded-xl transition-all shadow-sm"
+                    className="flex items-center gap-1 px-3 py-2 bg-indigo-50 dark:bg-indigo-950/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-450 border border-indigo-200/50 dark:border-indigo-900/40 font-bold text-xs rounded-xl transition-all shadow-sm"
                     title="Agregar ahorro"
                   >
                     <Plus className="w-3.5 h-3.5" />

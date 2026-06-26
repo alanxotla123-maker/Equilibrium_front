@@ -266,7 +266,7 @@ export default function DashboardView({ onViewChange }: DashboardViewProps) {
                 {/* Progress bar */}
                 <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full mt-2 overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full"
                     style={{ width: `${savingProgress}%` }}
                   />
                 </div>
@@ -435,7 +435,7 @@ export default function DashboardView({ onViewChange }: DashboardViewProps) {
       {/* Bottom Bar Statistics & Actions */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500">
+          <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-500">
             <TrendingUp className="w-6 h-6" />
           </div>
           <div>

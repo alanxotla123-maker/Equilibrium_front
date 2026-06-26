@@ -344,7 +344,7 @@ export default function TasksView() {
             <h3 className="font-extrabold text-slate-700 dark:text-slate-200 text-sm uppercase tracking-wider">
               Tareas Completadas
             </h3>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-450 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-full">
               {completed.length}
             </span>
           </div>
@@ -366,7 +366,7 @@ export default function TasksView() {
                   {/* Completed checkbox */}
                   <button
                     onClick={() => handleToggleComplete(task)}
-                    className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-md bg-emerald-500 border-2 border-emerald-500 flex items-center justify-center hover:bg-emerald-400 transition-colors"
+                    className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-md bg-indigo-600 border-2 border-indigo-600 flex items-center justify-center hover:bg-indigo-500 transition-colors"
                     title="Marcar como pendiente"
                   >
                     <Check className="w-3 h-3 text-white" />
@@ -470,7 +470,7 @@ export default function TasksView() {
             </div>
             <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-full transition-all duration-700"
+                className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-700"
                 style={{
                   width: `${tasks.length > 0 ? (completed.length / tasks.length) * 100 : 0}%`,
                 }}
