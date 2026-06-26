@@ -11,6 +11,18 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-slate-101: #fafbfd;
+  --color-slate-105: #ebf0f5;
+  --color-slate-250: #d6dee9;
+  --color-slate-350: #b2c1d3;
+  --color-slate-450: #7c8ba1;
+  --color-slate-455: #78879d;
+  --color-slate-505: #56657a;
+  --color-slate-550: #505f74;
+  --color-slate-650: #3c4a5c;
+  --color-slate-750: #283547;
+  --color-slate-850: #16202e;
 }
 
 @media (prefers-color-scheme: dark) {
