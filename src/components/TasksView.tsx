@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Check, X, Edit2, Tag, Calendar, FileText, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, Check, X, Edit2, Tag, Calendar, FileText, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api, Task, Category } from '../lib/api';
 
 export default function TasksView() {
@@ -35,6 +35,35 @@ export default function TasksView() {
   const [deleteCatId, setDeleteCatId] = useState<string | null>(null);
   const [isConfirmCatOpen, setIsConfirmCatOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  
+  const getDaysOfWeek = (d: Date) => {
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    const startOfWeek = new Date(d);
+    startOfWeek.setDate(diff);
+    
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const nextDay = new Date(startOfWeek);
+      nextDay.setDate(startOfWeek.getDate() + i);
+      days.push(nextDay);
+    }
+    return days;
+  };
+
+  const handlePrevWeek = () => {
+    const prev = new Date(selectedDate);
+    prev.setDate(selectedDate.getDate() - 7);
+    setSelectedDate(prev);
+  };
+
+  const handleNextWeek = () => {
+    const next = new Date(selectedDate);
+    next.setDate(selectedDate.getDate() + 7);
+    setSelectedDate(next);
+  };
 
   useEffect(() => {
     fetchData();
@@ -194,14 +223,85 @@ export default function TasksView() {
       year: 'numeric',
     });
   };
+  const weekDays = getDaysOfWeek(selectedDate);
+  const monthName = selectedDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+  const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+  // Filter tasks that fall on the selected date on mobile, or show all if desired
+  const totalTasksCount = tasks.length;
+  const completedTasksCount = tasks.filter(t => t.isCompleted).length;
+  const pendingTasksCount = totalTasksCount - completedTasksCount;
+  const generalProgress = totalTasksCount > 0 ? Math.round((completedTasksCount / totalTasksCount) * 100) : 0;
 
   return (
-    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-100/40 dark:bg-slate-950/40 select-none">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
+    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-100/40 dark:bg-[#0b0e17] select-none relative pb-24">
+      {/* Mobile Weekly Calendar Strip */}
+      <div className="md:hidden space-y-3 mb-6 bg-white dark:bg-[#131722] border border-slate-200 dark:border-slate-850 p-4 rounded-2xl shadow-sm">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider">{capitalizedMonth}</h3>
+          <div className="flex gap-2">
+            <button onClick={handlePrevWeek} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors">
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button onClick={handleNextWeek} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors">
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-7 gap-1">
+          {weekDays.map((day, idx) => {
+            const isSelected = day.toDateString() === selectedDate.toDateString();
+            const dayLabel = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'][idx];
+            return (
+              <button
+                key={idx}
+                onClick={() => setSelectedDate(day)}
+                className={`flex flex-col items-center justify-center py-2 rounded-xl transition-all ${
+                  isSelected 
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                    : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
+                }`}
+              >
+                <span className="text-[9px] font-black">{dayLabel}</span>
+                <span className="text-sm font-black mt-0.5">{day.getDate()}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* General Progress Bar inside mobile header */}
+        <div className="pt-2 border-t border-slate-100 dark:border-slate-800/60">
+          <div className="flex justify-between items-center text-[10px] font-black text-slate-450 dark:text-slate-500 uppercase tracking-widest mb-1.5">
+            <span>Progreso General</span>
+            <span className="text-indigo-600 dark:text-indigo-400">{generalProgress}%</span>
+          </div>
+          <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full" style={{ width: `${generalProgress}%` }}></div>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-2 mt-3 text-center">
+            <div className="p-1 bg-slate-50 dark:bg-slate-800/40 rounded-lg">
+              <span className="block text-[11px] font-black text-indigo-600 dark:text-indigo-400">{completedTasksCount}</span>
+              <span className="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Completadas</span>
+            </div>
+            <div className="p-1 bg-slate-50 dark:bg-slate-800/40 rounded-lg">
+              <span className="block text-[11px] font-black text-amber-500">{pendingTasksCount}</span>
+              <span className="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Pendientes</span>
+            </div>
+            <div className="p-1 bg-slate-50 dark:bg-slate-800/40 rounded-lg">
+              <span className="block text-[11px] font-black text-slate-650 dark:text-slate-350">{totalTasksCount}</span>
+              <span className="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Totales</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="hidden md:flex items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3">
-            <span className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400">
+            <span className="p-2 rounded-xl bg-indigo-55 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30">
               <FileText className="w-6 h-6" />
             </span>
             Tareas
@@ -219,45 +319,52 @@ export default function TasksView() {
         </button>
       </div>
 
-      {/* Category filter chips */}
-      {categories.length > 0 && (
-        <div className="flex items-center gap-2 mb-6 flex-wrap">
-          <button
-            onClick={() => setFilterCategoryId('all')}
-            className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
-              filterCategoryId === 'all'
-                ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-            }`}
-          >
-            Todas
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() =>
-                setFilterCategoryId(filterCategoryId === cat.id ? 'all' : cat.id)
-              }
-              className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 ${
-                filterCategoryId === cat.id
-                  ? 'text-white border-transparent shadow-sm'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-              }`}
-              style={
-                filterCategoryId === cat.id
-                  ? { backgroundColor: cat.color, borderColor: cat.color }
-                  : {}
-              }
-            >
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: filterCategoryId === cat.id ? 'white' : cat.color }}
-              />
-              {cat.name}
-            </button>
-          ))}
+      {/* Category filter chips section */}
+      <div className="space-y-2 mb-6">
+        <div className="flex justify-between items-center">
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-450 dark:text-slate-450">Categorías</span>
+          <button onClick={() => setIsCatModalOpen(true)} className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">+ Nueva</button>
         </div>
-      )}
+        
+        {categories.length > 0 && (
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-2">
+            <button
+              onClick={() => setFilterCategoryId('all')}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all whitespace-nowrap ${
+                filterCategoryId === 'all'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                  : 'bg-white dark:bg-[#131722] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+              }`}
+            >
+              Todas
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() =>
+                  setFilterCategoryId(filterCategoryId === cat.id ? 'all' : cat.id)
+                }
+                className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                  filterCategoryId === cat.id
+                    ? 'text-white border-transparent shadow-sm'
+                    : 'bg-white dark:bg-[#131722] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                }`}
+                style={
+                  filterCategoryId === cat.id
+                    ? { backgroundColor: cat.color, borderColor: cat.color }
+                    : {}
+                }
+              >
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: filterCategoryId === cat.id ? 'white' : cat.color }}
+                />
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Task columns */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -849,6 +956,14 @@ export default function TasksView() {
           </div>
         </div>
       )}
+
+      {/* Floating Action Button for mobile */}
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="md:hidden fixed bottom-20 right-6 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full flex items-center justify-center shadow-xl shadow-indigo-600/30 z-35 transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+      >
+        <Plus className="w-7 h-7" />
+      </button>
     </div>
   );
 }

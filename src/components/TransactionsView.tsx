@@ -450,8 +450,12 @@ export default function TransactionsView() {
             </span>
             Finanzas Personales
           </h2>
-          <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
-            Gestiona tus ingresos, gastos diarios, tarjetas de crédito y ahorros acumulados.
+          <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">
+            {activeTab === 'diario' 
+              ? 'Gestiona tus ingresos y gastos diarios.'
+              : activeTab === 'tarjetas'
+              ? 'Gestiona tus tarjetas de crédito, límites y fechas de corte.'
+              : 'Gestiona tus ingresos, gastos, tarjetas y ahorros.'}
           </p>
         </div>
 
@@ -460,7 +464,7 @@ export default function TransactionsView() {
           {activeTab === 'diario' && (
             <button
               onClick={() => setIsTxModalOpen(true)}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/10 transition-all"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-650 hover:bg-indigo-700 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/20 transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Registrar Gasto/Ingreso
@@ -469,7 +473,7 @@ export default function TransactionsView() {
           {activeTab === 'tarjetas' && (
             <button
               onClick={() => setIsCardModalOpen(true)}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/10 transition-all"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-650 hover:bg-indigo-700 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/20 transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Nueva Tarjeta
@@ -478,7 +482,7 @@ export default function TransactionsView() {
           {activeTab === 'ahorros' && (
             <button
               onClick={() => setIsSavingModalOpen(true)}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md shadow-amber-500/10 transition-all"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-[#f59e0b] hover:bg-[#d97706] text-black font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Nueva Meta de Ahorro
@@ -486,28 +490,39 @@ export default function TransactionsView() {
           )}
         </div>
       </div>
-
       {/* Main Tabs Navigation */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto gap-8">
+      <div className="flex border-b border-slate-200 dark:border-slate-800/80 mb-6 overflow-x-auto gap-6 scrollbar-none select-none">
         <button
           onClick={() => setActiveTab('diario')}
-          className={`pb-4 text-sm font-bold border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'diario' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-350'}`}
+          className={`pb-3 text-xs md:text-sm font-black uppercase tracking-wider border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${
+            activeTab === 'diario' 
+              ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' 
+              : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-350'
+          }`}
         >
-          <Layers className="w-4 h-4" />
+          <Layers className="w-3.5 h-3.5" />
           Gastos Diarios
         </button>
         <button
           onClick={() => setActiveTab('tarjetas')}
-          className={`pb-4 text-sm font-bold border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'tarjetas' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-350'}`}
+          className={`pb-3 text-xs md:text-sm font-black uppercase tracking-wider border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${
+            activeTab === 'tarjetas' 
+              ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' 
+              : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-350'
+          }`}
         >
-          <CreditCard className="w-4 h-4" />
-          Tarjetas de Crédito ({cards.length})
+          <CreditCard className="w-3.5 h-3.5" />
+          Tarjetas ({cards.length})
         </button>
         <button
           onClick={() => setActiveTab('ahorros')}
-          className={`pb-4 text-sm font-bold border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'ahorros' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-355'}`}
+          className={`pb-3 text-xs md:text-sm font-black uppercase tracking-wider border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${
+            activeTab === 'ahorros' 
+              ? 'border-amber-500 text-amber-500' 
+              : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-655'
+          }`}
         >
-          <TrendingUp className="w-4 h-4" />
+          <TrendingUp className="w-3.5 h-3.5" />
           Ahorros (${totalSavings.toLocaleString('es-ES')})
         </button>
       </div>
@@ -521,105 +536,156 @@ export default function TransactionsView() {
         <>
           {/* TAB 1: GASTOS DIARIOS */}
           {activeTab === 'diario' && (
-            <div>
+            <div className="space-y-6">
               {/* Summary Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">Balance Neto</span>
-                  <h3 className={`text-3xl font-extrabold tracking-tight ${netBalance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600'}`}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white dark:bg-[#131722] border border-slate-200 dark:border-slate-850 rounded-2xl p-5 shadow-sm">
+                  <span className="text-[10px] font-black text-slate-450 dark:text-slate-500 uppercase tracking-widest block mb-1">Balance Neto</span>
+                  <h3 className="text-2xl md:text-3xl font-black tracking-tight text-emerald-600 dark:text-emerald-450">
                     {netBalance < 0 ? '-' : ''}${Math.abs(netBalance).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </h3>
                   <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-1">Efectivo + Cuentas</p>
                 </div>
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">Total Ingresos</span>
-                  <h3 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-                    ${totalIncomes.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </h3>
-                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold mt-1">Entradas registradas</p>
-                </div>
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">Total Gastos</span>
-                  <h3 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-                    ${totalExpenses.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </h3>
-                  <p className="text-[10px] text-rose-600 dark:text-rose-400 font-bold mt-1">Salidas registradas</p>
+                
+                {/* Side-by-side grid on mobile */}
+                <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:contents">
+                  <div className="bg-white dark:bg-[#131722] border border-slate-200 dark:border-slate-855 rounded-2xl p-5 shadow-sm">
+                    <span className="text-[10px] font-black text-slate-450 dark:text-slate-500 uppercase tracking-widest block mb-1">Total Ingresos</span>
+                    <h3 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white tracking-tight">
+                      ${totalIncomes.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </h3>
+                    <p className="text-[10px] text-emerald-600 dark:text-emerald-500 font-bold mt-1">Entradas registradas</p>
+                  </div>
+                  <div className="bg-white dark:bg-[#131722] border border-slate-200 dark:border-slate-855 rounded-2xl p-5 shadow-sm">
+                    <span className="text-[10px] font-black text-slate-455 dark:text-slate-500 uppercase tracking-widest block mb-1">Total Gastos</span>
+                    <h3 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white tracking-tight">
+                      ${totalExpenses.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </h3>
+                    <p className="text-[10px] text-rose-600 dark:text-rose-450 font-bold mt-1">Salidas registradas</p>
+                  </div>
                 </div>
               </div>
 
-              {/* Transactions list & breakdown */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div className="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-850/60">
-                    <div className="flex rounded-xl bg-slate-200/60 dark:bg-slate-800 p-1 text-xs font-bold text-slate-500 dark:text-slate-400 border border-slate-200/30 dark:border-slate-700/30">
-                      <button onClick={() => setFilterType('all')} className={`px-3 py-1.5 rounded-lg transition-all ${filterType === 'all' ? 'bg-white dark:bg-slate-750 shadow-sm text-slate-800 dark:text-white' : 'hover:text-slate-700 dark:hover:text-slate-350'}`}>Todos</button>
-                      <button onClick={() => setFilterType('gasto')} className={`px-3 py-1.5 rounded-lg transition-all ${filterType === 'gasto' ? 'bg-white dark:bg-slate-750 shadow-sm text-rose-600' : 'hover:text-slate-700 dark:hover:text-slate-350'}`}>Gastos</button>
-                      <button onClick={() => setFilterType('ingreso')} className={`px-3 py-1.5 rounded-lg transition-all ${filterType === 'ingreso' ? 'bg-white dark:bg-slate-750 shadow-sm text-emerald-600 dark:text-emerald-400' : 'hover:text-slate-700 dark:hover:text-slate-355'}`}>Ingresos</button>
-                    </div>
+              {/* Tus Tarjetas (Mobile horizontal scroll section) */}
+              {cards.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xs font-black uppercase tracking-widest text-slate-450 dark:text-slate-400">Tus Tarjetas</h3>
+                    <button onClick={() => setActiveTab('tarjetas')} className="text-xs font-bold text-indigo-600 dark:text-indigo-400">Ver todas</button>
+                  </div>
+                  
+                  <div className="flex gap-4 overflow-x-auto scrollbar-none snap-x pb-2">
+                    {cards.map((card, index) => {
+                      const totalDebt = getCardUsedBalance(card);
+                      const limit = Number(card.creditLimit);
+                      const available = Math.max(0, limit - totalDebt);
+                      const usedPercentage = Math.min(100, Math.round((totalDebt / limit) * 100)) || 0;
+                      const gradient = cardGradients[index % cardGradients.length];
 
-                    {categories.length > 0 && (
-                      <select
-                        value={filterCategoryId}
-                        onChange={(e) => setFilterCategoryId(e.target.value)}
-                        className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-850"
-                      >
-                        <option value="all">Todas las Categorías</option>
-                        {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-                      </select>
-                    )}
+                      return (
+                        <div 
+                          key={card.id} 
+                          className={`w-[290px] flex-shrink-0 snap-center p-5 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md relative overflow-hidden flex flex-col justify-between h-40`}
+                        >
+                          <div className="absolute -bottom-6 -right-6 opacity-10 pointer-events-none">
+                            <CreditCard className="w-24 h-24" />
+                          </div>
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h4 className="font-extrabold text-sm leading-tight">{card.name}</h4>
+                              <span className="text-[9px] text-white/70 font-semibold">Corte: Día {card.closingDay} | Pago: Día {card.dueDate}</span>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-baseline">
+                              <span className="text-[8px] font-bold text-white/80">Deuda Total</span>
+                              <span className="text-base font-extrabold">${formatMoney(totalDebt)}</span>
+                            </div>
+
+                            <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden mt-1">
+                              <div className="h-full bg-white rounded-full" style={{ width: `${usedPercentage}%` }} />
+                            </div>
+
+                            <div className="flex justify-between text-[8px] font-bold text-white/70 mt-1">
+                              <span>Disponible: ${formatMoney(available)}</span>
+                              <span>Límite: ${formatMoney(limit)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Transactions list & breakdown */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-8 bg-white dark:bg-[#131722] border border-slate-200 dark:border-slate-850 rounded-2xl shadow-sm overflow-hidden">
+                  <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-850 bg-slate-50/60 dark:bg-slate-900/60">
+                    <h3 className="text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-400">Movimientos</h3>
+                    <div className="flex rounded-lg bg-slate-100 dark:bg-slate-800 p-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50">
+                      <button onClick={() => setFilterType('all')} className={`px-2.5 py-1 rounded-md transition-all ${filterType === 'all' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-800 dark:text-white' : ''}`}>Todos</button>
+                      <button onClick={() => setFilterType('gasto')} className={`px-2.5 py-1 rounded-md transition-all ${filterType === 'gasto' ? 'bg-white dark:bg-slate-700 shadow-sm text-rose-500' : ''}`}>Gastos</button>
+                      <button onClick={() => setFilterType('ingreso')} className={`px-2.5 py-1 rounded-md transition-all ${filterType === 'ingreso' ? 'bg-white dark:bg-slate-700 shadow-sm text-emerald-500' : ''}`}>Ingresos</button>
+                    </div>
                   </div>
 
-                  <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-[500px] overflow-y-auto">
+                  <div className="divide-y divide-slate-150 dark:divide-slate-850 max-h-[400px] overflow-y-auto">
                     {filteredTransactions.length === 0 ? (
-                      <div className="px-6 py-20 text-center">
-                        <span className="text-4xl mb-3 block"></span>
-                        <p className="text-sm text-slate-400 dark:text-slate-500 font-semibold">No hay transacciones registradas</p>
+                      <div className="px-6 py-16 text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold">No hay transacciones registradas</p>
                       </div>
                     ) : (
                       filteredTransactions.map(tx => (
-                        <div key={tx.id} className="flex items-center justify-between px-6 py-4 hover:bg-slate-50/40 dark:hover:bg-slate-850/40 transition-colors group">
-                          <div className="flex items-center gap-4 min-w-0">
-                            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: tx.category ? tx.category.color + '18' : '#e2e8f0', color: tx.category ? tx.category.color : '#64748b' }}>
-                              {tx.type === 'gasto' ? <ArrowDownRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
+                        <div key={tx.id} className="flex items-center justify-between px-5 py-3 hover:bg-slate-50/40 dark:hover:bg-slate-850/40 transition-colors group">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: tx.category ? tx.category.color + '12' : '#1e293b', color: tx.category ? tx.category.color : '#94a3b8' }}>
+                              {tx.type === 'gasto' ? <ArrowDownRight className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
                             </div>
                             <div className="min-w-0">
-                              <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm truncate leading-snug">{tx.description || (tx.type === 'gasto' ? 'Gasto' : 'Ingreso')}</h4>
-                              <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                {tx.category && <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase" style={{ backgroundColor: tx.category.color + '12', color: tx.category.color }}>{tx.category.name}</span>}
-                                {tx.card && <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40 flex items-center gap-1"><CreditCard className="w-2.5 h-2.5" /> {tx.card.name}</span>}
-                                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> {formatDate(tx.date)}</span>
+                              <h4 className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate">{tx.description || (tx.type === 'gasto' ? 'Gasto' : 'Ingreso')}</h4>
+                              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                {tx.category && <span className="text-[8px] font-black px-1.5 py-0.2 rounded-md uppercase" style={{ backgroundColor: tx.category.color + '12', color: tx.category.color }}>{tx.category.name}</span>}
+                                {tx.card && <span className="text-[8px] font-black px-1.5 py-0.2 rounded-md bg-indigo-950/20 text-indigo-400 border border-indigo-900/40">{tx.card.name}</span>}
+                                <span className="text-[9px] text-slate-400 dark:text-slate-500">{formatDate(tx.date)}</span>
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className={`text-sm font-extrabold ${tx.type === 'gasto' ? 'text-rose-600' : 'text-emerald-600'}`}>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs font-black ${tx.type === 'gasto' ? 'text-rose-500' : 'text-emerald-500'}`}>
                               {tx.type === 'gasto' ? '-' : '+'}${Number(tx.amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
-                            <button onClick={() => openConfirmModal(tx.id)} className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 text-slate-350 dark:text-slate-500 hover:text-rose-600 rounded-lg"><Trash2 className="w-4 h-4" /></button>
+                            <button onClick={() => openConfirmModal(tx.id)} className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-slate-400 hover:text-rose-500"><Trash2 className="w-3.5 h-3.5" /></button>
                           </div>
                         </div>
                       ))
                     )}
                   </div>
+                  
+                  {filteredTransactions.length > 0 && (
+                    <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-850 text-center bg-slate-50/10 dark:bg-slate-900/10">
+                      <button onClick={() => setFilterType('all')} className="text-xs font-bold text-slate-400 dark:text-slate-500 hover:text-indigo-500">Cargar más movimientos</button>
+                    </div>
+                  )}
                 </div>
 
-                <div className="lg:col-span-4 space-y-6">
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-                    <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-base mb-1">Gastos por Categoría</h3>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold mb-6">Desglose de egresos en efectivo y tarjetas.</p>
+                <div className="lg:col-span-4">
+                  <div className="bg-white dark:bg-[#131722] border border-slate-200 dark:border-slate-850 rounded-2xl p-5 shadow-sm">
+                    <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-xs mb-3 uppercase tracking-widest text-slate-400">Gastos por Categoría</h3>
                     {expenseByCategory.length === 0 ? (
-                      <p className="text-xs text-slate-400 dark:text-slate-550 font-semibold italic text-center py-6">Sin datos de gastos.</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 italic text-center py-4">Sin datos de gastos.</p>
                     ) : (
-                      <div className="space-y-4">
-                        {expenseByCategory.map(cat => {
+                      <div className="space-y-3">
+                        {expenseByCategory.slice(0, 4).map(cat => {
                           const percentage = totalExpenseInCategories > 0 ? Math.round((cat.total / totalExpenseInCategories) * 100) : 0;
                           return (
                             <div key={cat.id} className="space-y-1">
-                              <div className="flex justify-between text-xs font-bold text-slate-650 dark:text-slate-300">
-                                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }} />{cat.name}</span>
+                              <div className="flex justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.color }} />{cat.name}</span>
                                 <span>${cat.total.toLocaleString('es-ES')} ({percentage}%)</span>
                               </div>
-                              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                              <div className="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                 <div className="h-full rounded-full" style={{ backgroundColor: cat.color, width: `${percentage}%` }} />
                               </div>
                             </div>
@@ -870,15 +936,23 @@ export default function TransactionsView() {
               </div>
 
               {savings.length === 0 ? (
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center shadow-sm">
-                  <Target className="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">No tienes objetivos de ahorro activos</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6 max-w-sm mx-auto">Define tus metas de ahorro (e.g. Vacaciones, Coche, Emergencias) para llevar una proyección mensual del capital necesario.</p>
+                <div className="bg-white dark:bg-[#131722] border border-slate-200 dark:border-slate-850 rounded-3xl p-10 text-center shadow-sm">
+                  {/* Concentric rings radar graphic */}
+                  <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                    <div className="absolute w-20 h-20 rounded-full border-2 border-slate-200 dark:border-slate-800/60 animate-pulse"></div>
+                    <div className="absolute w-14 h-14 rounded-full border-2 border-slate-350 dark:border-slate-700/80 flex items-center justify-center">
+                      <div className="absolute w-8 h-8 rounded-full border-2 border-slate-450 dark:border-slate-600 flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="text-base font-black text-slate-800 dark:text-slate-200">No tienes objetivos de ahorro activos</h3>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-2 mb-8 max-w-xs mx-auto leading-relaxed">Define tus metas de ahorro (e.g. Vacaciones, Coche, Emergencias) para llevar una proyección mensual del capital necesario.</p>
                   <button
                     onClick={() => setIsSavingModalOpen(true)}
-                    className="px-5 py-3 bg-amber-500 text-white font-bold text-sm rounded-xl hover:bg-amber-600 shadow-md transition-all"
+                    className="px-8 py-3 bg-[#f59e0b] hover:bg-[#d97706] text-black font-black text-xs uppercase tracking-wider rounded-2xl shadow-lg shadow-amber-500/20 transition-all"
                   >
-                    Crear mi Primer Meta
+                    Crear mi Primera Meta
                   </button>
                 </div>
               ) : (
